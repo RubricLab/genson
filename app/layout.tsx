@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { AI } from "./action";
 import "./globals.css";
+import { Toaster } from 'sonner'
 
 export const metadata: Metadata = {
   title: "Generative UI Minimal Demo",
@@ -15,6 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-black dark">
+       <Toaster />
         <main className="p-4 max-w-2xl">
           <AI>{children}</AI>
         </main>

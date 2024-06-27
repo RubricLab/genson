@@ -7,14 +7,12 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/dropdown";
-import { z } from "zod";
-import { rubricSchema } from "@/app/schema";
+import type { z } from "zod";
+import type { rubricSchema } from "@/app/schema";
 import { useSetAtom } from "jotai";
 import dataStore from "./store";
 
-export default function RubricDropdown(
-	props: z.infer<typeof rubricSchema.components.dropdown>,
-) {
+export default function RubricDropdown({ props, name = "" }: { props: z.infer<typeof rubricSchema.components.dropdown>, name?: string }) {
 	const setDataStore = useSetAtom(dataStore);
 
 	function handleValueChange(value: string) {
@@ -24,13 +22,13 @@ export default function RubricDropdown(
 	}
 
     return (
-	<Select onValueChange={(value) => handleValueChange(value)}>
+	<Select name={name} onValueChange={(value) => handleValueChange(value)}>
 		<SelectTrigger className="w-[180px]">
 			<SelectValue placeholder={props.placeholder} />
 		</SelectTrigger>
 		<SelectContent>
 			{props.options.map((option: {label: string, value: string}, index: number) => (
-				<SelectItem key={index} value={option.value}>{option.label}</SelectItem>
+				<SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
 			))}
 		</SelectContent>
 	</Select>

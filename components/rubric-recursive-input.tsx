@@ -1,5 +1,5 @@
 import type { z } from "zod";
-import type { rubricSchema } from "@/app/action";
+import type { rubricSchema } from "@/app/schema";
 import RubricButton from "./rubric-button";
 import RubricInput from "./rubric-input";
 import RubricDropdown from "./rubric-dropdown";
@@ -13,11 +13,11 @@ export default function RubricRecursiveInput(
 	}
 
 	if (props.type === "input") {
-		return <RubricInput size={props.size} placeholder={props.placeholder} setterValue={props.setterValue} />;
+		return <RubricInput props={props} />;
 	}
 
 	if (props.type === "dropdown") {
-		return <RubricDropdown options={props.options} placeholder={props.placeholder} setterValue={props.setterValue} />;
+		return <RubricDropdown props={props} />;
 	}
 
 	return (
@@ -25,7 +25,6 @@ export default function RubricRecursiveInput(
 			{props.recChild && (
 				<RubricRecursiveInput
 					{...props.recChild.props}
-					// type={props.recChild.type}
 				/>
 			)}
 		</div>
