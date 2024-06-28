@@ -51,60 +51,78 @@ const formActionSchema: Record<z.infer<typeof FormActions>['name'], ActionType> 
 	sightSeeingTours: {
 		name: sightSeeingTours.shape.name.value,
 		args: sightSeeingTours.shape.args,
-		fn: async (args: z.infer<typeof sightSeeingTours>["args"]) => {
-			console.log("Booking sight-seeing tour:", args);
-			await new Promise((resolve) => setTimeout(resolve, 1000));
-			return {
-				success: true,
-				message: `Tour booked for ${args.name} (account: ${args.email}) in ${args.city} for ${args.participants} participants.`,
-			};
-		},
+		fn: z.function()
+			.args(sightSeeingTours.shape.args)
+			.returns(z.promise(z.object({
+				success: z.boolean(),
+				message: z.string()
+			})))
+			.implement(async (args) => {
+				console.log("Booking sight-seeing tour:", args);
+				await new Promise((resolve) => setTimeout(resolve, 1000));
+				return {
+					success: true,
+					message: `Tour booked for ${args.name} (account: ${args.email}) in ${args.city} for ${args.participants} participants.`,
+				};
+			}),
 	},
 	chatGPTCall: {
 		name: ChatGPTCall.shape.name.value,
 		args: ChatGPTCall.shape.args,
-		fn: async (args: z.infer<typeof ChatGPTCall>["args"]) => {
-			console.log("Calling ChatGPT:", args);
+		fn: z.function()
+			.args(ChatGPTCall.shape.args)
+			.returns(z.promise(z.object({
+				success: z.boolean(),
+				message: z.string()
+			})))
+			.implement(async (args) => {
+				console.log("Calling ChatGPT:", args);
 
-			await new Promise((resolve) => setTimeout(resolve, 1000));
+				await new Promise((resolve) => setTimeout(resolve, 1000));
 
-			const openai = new OpenAI({
-				apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-				dangerouslyAllowBrowser: true,
-			});
+				const openai = new OpenAI({
+					apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+					dangerouslyAllowBrowser: true,
+				});
 
-			const response = await openai.chat.completions.create({
-				model: "gpt-3.5-turbo",
-				messages: [
-					{
-						role: "system",
-						content:
-							"You are a helpful assistant that can answer questions and help with tasks.",
-					},
-					{
-						role: "user",
-						content: args.message,
-					},
-				],
-				stream: false,
-			});
+				const response = await openai.chat.completions.create({
+					model: "gpt-3.5-turbo",
+					messages: [
+						{
+							role: "system",
+							content:
+								"You are a helpful assistant that can answer questions and help with tasks.",
+						},
+						{
+							role: "user",
+							content: args.message,
+						},
+					],
+					stream: false,
+				});
 
-			return {
-				success: true,
-				message: `Response: ${response.choices[0].message.content}`,
-			};
-		},
+				return {
+					success: true,
+					message: `Response: ${response.choices[0].message.content}`,
+				};
+			}),
 	},
 	goNuts: {
 		name: goNuts.shape.name.value,
 		args: goNuts.shape.args,
-		fn: async (args: z.infer<typeof goNuts>["args"]) => {
-			console.log(args);
-			return {
-				success: true,
-				message: `Going nuts: ${JSON.stringify(args)}`,
-			};
-		},
+		fn: z.function()
+			.args(goNuts.shape.args)
+			.returns(z.promise(z.object({
+				success: z.boolean(),
+				message: z.string()
+			})))
+			.implement(async (args) => {
+				console.log(args);
+				return {
+					success: true,
+					message: `Going nuts: ${JSON.stringify(args)}`,
+				};
+			}),
 	},
 };
 
@@ -231,3 +249,4 @@ for (const key of Object.keys(rubricSchema.components)) {
 }
 
 export { buttonActions, formActionSchema };
+
