@@ -11,9 +11,8 @@ import { type rubricSchema, formActionSchema } from "@/app/schema";
 export default function RubricForm(
 	props: z.infer<typeof rubricSchema.components.form>,
 ) {
-
-    console.log(props)
-
+	console.log(props);
+	
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		const formData = new FormData(e.currentTarget);
@@ -21,23 +20,25 @@ export default function RubricForm(
 		formData.forEach((value, key) => {
 			formDataObject[key] = value.toString();
 		});
-		toast("Form Data", 
-        {
-            description: <pre>{JSON.stringify(formDataObject, null, 2)}</pre>,
+		toast("Form Data", {
+			description: <pre>{JSON.stringify(formDataObject, null, 2)}</pre>,
 		});
 
-        await new Promise(resolve => setTimeout(resolve, 1000));
+		await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        toast.promise(formActionSchema[props.formAction.name].fn(formDataObject), {
-            loading: "Making API Call...",
-            success: (data) => {
-                return data.message
-            }
-        })
-        console.log(await formActionSchema[props.formAction.name].fn(formDataObject))
+		toast.promise(formActionSchema[props.formAction.name].fn(formDataObject), {
+			loading: "Making API Call...",
+			success: (data) => {
+				return data.message;
+			},
+		});
 	}
 	return (
-		<form autoComplete="off" onSubmit={handleSubmit} className="flex flex-col gap-5">
+		<form
+			autoComplete="off"
+			onSubmit={handleSubmit}
+			className="flex flex-col gap-5"
+		>
 			{props.children.map((child) => {
 				if (child.props.type === "input" || child.type === "input") {
 					return (
@@ -58,7 +59,9 @@ export default function RubricForm(
 					);
 				}
 			})}
-			<Button className="w-1/2" type="submit">Submit</Button>
+			<Button className="w-1/2" type="submit">
+				Submit
+			</Button>
 		</form>
 	);
 }

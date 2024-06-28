@@ -41,7 +41,13 @@ const goNuts = z.object({
 	args: z.record(z.any()),
 });
 
-const formActionSchema: Record<string, ActionType> = {
+const FormActions = z.discriminatedUnion("name", [
+	sightSeeingTours,
+	ChatGPTCall,
+	goNuts,
+])
+
+const formActionSchema: Record<z.infer<typeof FormActions>['name'], ActionType> = {
 	sightSeeingTours: {
 		name: sightSeeingTours.shape.name.value,
 		args: sightSeeingTours.shape.args,
@@ -176,11 +182,7 @@ export const rubricSchema = {
 		}),
 		form: z
 			.object({
-				formAction: z.discriminatedUnion("name", [
-					sightSeeingTours,
-					ChatGPTCall,
-					goNuts,
-				]),
+				formAction: FormActions,
 				children: z
 					.array(z.custom<"Recursive">())
 					.describe("Use props with type and the args for the component")
