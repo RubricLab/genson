@@ -6,7 +6,7 @@ import RubricInput from "./rubric-input";
 import { Button } from "rubricui";
 import RubricDropdown from "./rubric-dropdown";
 import { toast } from "sonner";
-import { rubricSchema, formActionSchema } from "@/app/schema";
+import { type rubricSchema, formActionSchema } from "@/app/schema";
 
 export default function RubricForm(
 	props: z.infer<typeof rubricSchema.components.form>,
@@ -28,13 +28,13 @@ export default function RubricForm(
 
         await new Promise(resolve => setTimeout(resolve, 1000));
 
-        toast.promise(formActionSchema[props.formAction].fn(formDataObject), {
+        toast.promise(formActionSchema[props.formAction.name].fn(formDataObject), {
             loading: "Making API Call...",
             success: (data) => {
                 return data.message
             }
         })
-        console.log(await formActionSchema[props.formAction].fn(formDataObject))
+        console.log(await formActionSchema[props.formAction.name].fn(formDataObject))
 	}
 	return (
 		<form autoComplete="off" onSubmit={handleSubmit} className="flex flex-col gap-5">

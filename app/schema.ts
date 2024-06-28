@@ -1,6 +1,107 @@
 import { z } from "zod";
 import OpenAI from "openai";
 
+const Action = z.object({
+	name: z.string(),
+	args: z.record(z.string(), z.any()),
+	fn: z
+		.function()
+		.args(z.any())
+		.returns(
+			z.promise(
+				z.object({
+					success: z.boolean(),
+					message: z.string(),
+				}),
+			),
+		),
+});
+
+type ActionType = z.infer<typeof Action>;
+
+const ChatGPTCall = z.object({
+	name: z.literal("chatGPTCall"),
+	args: z.object({
+		message: z.string().describe("The message to send to ChatGPT"),
+	}),
+});
+
+const sightSeeingTours = z.object({
+	name: z.literal("sightSeeingTours"),
+	args: z.object({
+		name: z.string(),
+		email: z.string(),
+		participants: z.number(),
+		city: z.string(),
+	}),
+});
+
+const goNuts = z.object({
+	name: z.literal("goNuts"),
+	args: z.record(z.any()),
+});
+
+const formActionSchema: Record<string, ActionType> = {
+	sightSeeingTours: {
+		name: sightSeeingTours.shape.name.value,
+		args: sightSeeingTours.shape.args,
+		fn: async (args: z.infer<typeof sightSeeingTours>["args"]) => {
+			console.log("Booking sight-seeing tour:", args);
+			await new Promise((resolve) => setTimeout(resolve, 1000));
+			return {
+				success: true,
+				message: `Tour booked for ${args.name} (account: ${args.email}) in ${args.city} for ${args.participants} participants.`,
+			};
+		},
+	},
+	chatGPTCall: {
+		name: ChatGPTCall.shape.name.value,
+		args: ChatGPTCall.shape.args,
+		fn: async (args: z.infer<typeof ChatGPTCall>["args"]) => {
+			console.log("Calling ChatGPT:", args);
+
+			await new Promise((resolve) => setTimeout(resolve, 1000));
+
+			const openai = new OpenAI({
+				apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+				dangerouslyAllowBrowser: true,
+			});
+
+			const response = await openai.chat.completions.create({
+				model: "gpt-3.5-turbo",
+				messages: [
+					{
+						role: "system",
+						content:
+							"You are a helpful assistant that can answer questions and help with tasks.",
+					},
+					{
+						role: "user",
+						content: args.message,
+					},
+				],
+				stream: false,
+			});
+
+			return {
+				success: true,
+				message: `Response: ${response.choices[0].message.content}`,
+			};
+		},
+	},
+	goNuts: {
+		name: goNuts.shape.name.value,
+		args: goNuts.shape.args,
+		fn: async (args: z.infer<typeof goNuts>["args"]) => {
+			console.log(args);
+			return {
+				success: true,
+				message: `Going nuts: ${JSON.stringify(args)}`,
+			};
+		},
+	},
+};
+
 const buttonActions = {
 	closeApp: () => {
 		alert("Closing App");
@@ -17,77 +118,6 @@ const buttonActions = {
 	undefined: () => {
 		return;
 	},
-};
-
-// TODO: Actions and Blocks
-
-const formActionSchema = {
-
-	// TODO: z.infer<typeof> for args
-	// Schema, function code, name of the function for each "Action"
-	sightSeeingTours: { // Action Type, args are a zod object
-		args: [
-			{ name: "The name of the person" },
-			{ email: "The email of the person" },
-			{ participants: "The number of participants" },
-			{ city: "The city of the person" }
-		],
-		fn: async (args) => {
-			console.log("Booking sight-seeing tour:", args);
-			// Simulating an API call or booking process
-			await new Promise(resolve => setTimeout(resolve, 1000));
-			return {
-				success: true,
-				message: `Tour booked for ${args.name} (account: ${args.email}) in ${args.city} for ${args.participants} participants.`
-			};
-		},
-	},
-
-	chatGPTCall: {
-		args: [
-			{ message: "The message to send to ChatGPT" }
-		],
-		fn: async (args) => {
-			console.log("Calling ChatGPT:", args);
-			// Simulating an API call or ChatGPT call
-			await new Promise(resolve => setTimeout(resolve, 1000));
-
-			const openai = new OpenAI({
-				apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-				dangerouslyAllowBrowser: true 
-			});
-	
-			const response = await openai.chat.completions.create({
-				model: "gpt-3.5-turbo",
-				messages: [
-					{
-						role: "system",
-						content: "You are a helpful assistant that can answer questions and help with tasks."
-					},
-					{
-						role: "user",
-						content: args.message
-					}
-				],
-				stream: false
-			});
-
-			return {
-				success: true,
-				message: `Response: ${response.choices[0].message.content}`
-			};
-		},
-	},
-	goNuts: {
-		args: [],
-		fn: async (args) => {
-			console.log(args)
-			return {
-				success: true,
-				message: `Going nuts: ${JSON.stringify(args)}`
-			};
-		},
-	}
 };
 
 export const rubricSchema = {
@@ -144,17 +174,23 @@ export const rubricSchema = {
 					"The data label that will be writen to when the dropdown is changed",
 				),
 		}),
-		// TODO: use ZOD discriminated Union of different types (each function is a type)
-		form: z.object({
-			formAction: z.union([
-				z.literal("sightSeeingTours").describe(`Required the following args: ${JSON.stringify(formActionSchema.sightSeeingTours.args)}`),
-				z.literal("chatGPTCall").describe(`Required the following args: ${JSON.stringify(formActionSchema.chatGPTCall.args)}`),
-				z.literal("goNuts").describe("For arbitrary args, use anything")
-			  ]),
-			children: z
-				.array(z.custom<"Recursive">()).describe("Use props with type and the args for the component")
-				.describe("The children of the form. Must be either input or dropdown.  Number of components must match the number of arguments in the formAction"),
-		}).describe("Use the exact same argument keys in the formAction for the component setterValues in the form"),
+		form: z
+			.object({
+				formAction: z.discriminatedUnion("name", [
+					sightSeeingTours,
+					ChatGPTCall,
+					goNuts,
+				]),
+				children: z
+					.array(z.custom<"Recursive">())
+					.describe("Use props with type and the args for the component")
+					.describe(
+						"The children of the form. Must be either input or dropdown.  Number of components must match the number of arguments in the formAction",
+					),
+			})
+			.describe(
+				"Use the exact same argument keys in the formAction for the component setterValues in the form",
+			),
 	},
 };
 
