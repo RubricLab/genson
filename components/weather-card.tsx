@@ -4,7 +4,6 @@ import type { rubricSchema } from "@/app/schema";
 import type { z } from "zod";
 import { useAtomValue } from "jotai";
 import dataStore from "../lib/store";
-import RubricRecursiveInput from "./rubric/rubric-recursive-input";
 
 export default function WeatherCard(
   info: z.infer<typeof rubricSchema.components.weatherCard>

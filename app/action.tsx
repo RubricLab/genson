@@ -5,7 +5,6 @@ import { Spinner } from "@/components/spinner";
 import { BotMessage } from "@/components/message";
 import RubricButton from "@/components/rubric/rubric-button";
 import RubricInput from "@/components/rubric/rubric-input";
-import RubricRecursiveBox from "@/components/rubric/rubric-recursive";
 import WeatherCard from "@/components/weather-card";
 import { anthropic } from "@ai-sdk/anthropic";
 import RubricDropdown from "../components/rubric/rubric-dropdown";
