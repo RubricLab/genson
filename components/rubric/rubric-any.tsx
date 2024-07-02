@@ -4,37 +4,42 @@ import type { RecursiveType } from "@/app/schema";
 import RubricButton from "./rubric-button";
 import type { z } from "zod";
 import RubricInput from "./rubric-input";
-import RubricViewer from "./rubric-viewer";
+import RubricLayout from "./rubric-layout";
 import RubricForm from "./rubric-form";
+import WeatherCard from "../weather-card";
+import RubricDropdown from "./rubric-dropdown";
+import RubricTable from "./rubric-table";
+
+const componentMap = {
+	button: (props: z.infer<typeof rubricSchema.components.button>) => (
+		<RubricButton {...props} />
+	),
+	input: (props: z.infer<typeof rubricSchema.components.input>) => (
+		<RubricInput props={props} />
+	),
+	layout: (props: z.infer<typeof rubricSchema.components.layout>) => (
+		<RubricLayout props={props} parent={false} />
+	),
+	form: (props: z.infer<typeof rubricSchema.components.form>) => (
+		<RubricForm {...props} />
+	),
+	weather_card: (
+		props: z.infer<typeof rubricSchema.components.weatherCard>,
+	) => <WeatherCard {...props} />,
+	dropdown: (props: z.infer<typeof rubricSchema.components.dropdown>) => (
+		<RubricDropdown props={props} />
+	),
+	table: (props: z.infer<typeof rubricSchema.components.table>) => (
+		<RubricTable {...props} />
+	),
+};
 
 export default function RubricAny(props: RecursiveType) {
-	switch (props.type) {
-		case "button":
-			return (
-				<RubricButton
-					{...(props.props as z.infer<typeof rubricSchema.components.button>)}
-				/>
-			);
-		case "input":
-			return (
-				<RubricInput
-					props={props.props as z.infer<typeof rubricSchema.components.input>}
-				/>
-			);
-		case "viewer":
-			return (
-				<RubricViewer
-					props={props.props as z.infer<typeof rubricSchema.components.viewer>}
-					parent={false}
-				/>
-			);
-		case "form":
-			return (
-				<RubricForm
-					{...(props.props as z.infer<typeof rubricSchema.components.form>)}
-				/>
-			);
-		default:
-			return <div>Unknown: {props.type}</div>;
-	}
+	const Component = componentMap[props.type as keyof typeof componentMap];
+	return Component ? (
+		// biome-ignore lint/suspicious/noExplicitAny: Not defined to a specific type of component
+		Component(props.props as any)
+	) : (
+		<div>Unknown: {props.type}</div>
+	);
 }

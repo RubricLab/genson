@@ -46,7 +46,6 @@ export default function WeatherCard(
         <div className="text-sm">
           <span>H:{weatherData.high}° </span>
           <span>L:{weatherData.low}°</span>
-          <RubricRecursiveInput {...info.recChild.props} />
         </div>
       </div>
     </div>
