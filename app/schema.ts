@@ -159,7 +159,11 @@ const buttonActions = {
 };
 
 const RecursiveObject = z.object({
-	type: z.string().describe("The type of the component, which is REQUIRED"),
+	type: z
+		.string()
+		.describe(
+			"The type of the component, which is REQUIRED. Do not include the word show, just the component name please. ex: button, viewer, input, ...",
+		),
 	props: z.record(z.string(), z.any()),
 });
 
@@ -199,7 +203,9 @@ const rubricSchema = {
 			low: z.number(),
 			weatherType: z.string(),
 			getterValue: z.string().describe("The data label that will be read"),
-			recChild: RecursiveObject.describe("Should only be an input or dropdown. Remember to set the type of the component"),
+			recChild: RecursiveObject.describe(
+				"Should only be an input or dropdown. Remember to set the type of the component",
+			),
 		}),
 		dropdown: z.object({
 			options: z
@@ -233,8 +239,23 @@ const rubricSchema = {
 		table: z.object({
 			caption: z.string().optional().describe("The caption of the table"),
 			columns: z.array(z.string()).describe("The column names of the table"),
-			rows: z.array(z.array(z.string()).describe("Must be the same length as the columns")).describe("The rows of the table"),
+			rows: z
+				.array(
+					z
+						.array(z.string())
+						.describe("Must be the same length as the columns"),
+				)
+				.describe("The rows of the table"),
 		}),
+		viewer: z
+			.object({
+				direction: z.enum(["horizontal", "vertical"]).default("horizontal"),
+				left_child: RecursiveObject.describe("Any component, even a viewer"),
+				right_child: RecursiveObject.describe("Any component, even a viewer"),
+			})
+			.describe(
+				"Used to show two components side by side. Useful for dashboards. A viewer can be a recursive object",
+			),
 	},
 };
 
