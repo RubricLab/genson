@@ -1,3 +1,5 @@
+export const runtime = 'edge'
+
 import { createAI, getMutableAIState, render, streamUI } from "ai/rsc";
 import OpenAI from "openai";
 import { z } from "zod";
