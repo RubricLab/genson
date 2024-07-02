@@ -11,6 +11,7 @@ import { anthropic } from "@ai-sdk/anthropic";
 import RubricDropdown from "../components/rubric/rubric-dropdown";
 import RubricForm from "@/components/rubric/rubric-form";
 import { rubricSchema } from "./schema";
+import RubricTable from "@/components/rubric/rubric-table";
 
 function generateId() {
 	return Math.floor(10000 + Math.random() * 90000).toString();
@@ -119,6 +120,14 @@ async function submitMessage(content: string) {
 					console.log(JSON.stringify(args, null, 2));
 					yield <Spinner />;
 					return <RubricForm {...args} />;
+				},
+			},
+			show_table: {
+				description: "Show a table",
+				parameters: rubricSchema.components.table,
+				generate: async function* (args) {
+					yield <Spinner />;
+					return <RubricTable {...args} />;
 				},
 			},
 		},

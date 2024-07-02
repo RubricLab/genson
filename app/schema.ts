@@ -230,6 +230,11 @@ const rubricSchema = {
 			.describe(
 				"Use the exact same argument keys in the formAction for the component setterValues in the form",
 			),
+		table: z.object({
+			caption: z.string().optional().describe("The caption of the table"),
+			columns: z.array(z.string()).describe("The column names of the table"),
+			rows: z.array(z.array(z.string()).describe("Must be the same length as the columns")).describe("The rows of the table"),
+		}),
 	},
 };
 
