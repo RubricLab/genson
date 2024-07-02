@@ -1,8 +1,6 @@
 "use server"
 
 import { createAI, getMutableAIState, streamUI } from "ai/rsc";
-import OpenAI from "openai";
-import { z } from "zod";
 import { Spinner } from "@/components/spinner";
 import { BotMessage } from "@/components/message";
 import RubricButton from "@/components/rubric/rubric-button";
@@ -142,7 +140,7 @@ async function submitMessage(content: string) {
 	});
 
 	return {
-		id: Date.now(),
+		id: generateId(),
 		role: "assistant",
 		display: result.value,
 	};
