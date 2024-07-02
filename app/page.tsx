@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic"
+
 import { useState } from "react";
 import { useUIState, useActions } from "ai/rsc";
 import type { AI } from "./action";
