@@ -1,8 +1,5 @@
 "use server"
 
-export const runtime = 'edge'
-export const dynamic = 'force-dynamic';
-
 import { createAI, getMutableAIState, streamUI } from "ai/rsc";
 import OpenAI from "openai";
 import { z } from "zod";
