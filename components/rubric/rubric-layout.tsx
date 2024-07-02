@@ -9,11 +9,11 @@ import {
 import RubricAny from "./rubric-any";
 import { cn } from "@/lib/utils";
 
-export default function RubricViewer({
+export default function RubricLayout({
 	props,
 	parent = true,
 }: {
-	props: z.infer<typeof rubricSchema.components.viewer>;
+	props: z.infer<typeof rubricSchema.components.layout>;
 	parent?: boolean;
 }) {
 	return (
@@ -29,7 +29,7 @@ export default function RubricViewer({
 				defaultSize={50}
 				className={cn(
 					"flex flex-col items-center justify-center",
-					props.left_child.type !== "viewer" ? "p-5" : "",
+					props.left_child.type !== "layout" ? "p-5" : "",
 				)}
 			>
 				<RubricAny {...props.left_child} />
@@ -39,7 +39,7 @@ export default function RubricViewer({
 				defaultSize={50}
 				className={cn(
 					"flex flex-col items-center justify-center",
-					props.right_child.type !== "viewer" ? "p-5" : "",
+					props.right_child.type !== "layout" ? "p-5" : "",
 				)}
 			>
 				<RubricAny {...props.right_child} />

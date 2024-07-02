@@ -162,7 +162,7 @@ const RecursiveObject = z.object({
 	type: z
 		.string()
 		.describe(
-			"The type of the component, which is REQUIRED. Do not include the word show, just the component name please. ex: button, viewer, input, ...",
+			"The type of the component, which is REQUIRED. Do not include the word 'show', just the component name please. ex: button, layout, input, ... and use underscore for spaces",
 		),
 	props: z.record(z.string(), z.any()),
 });
@@ -192,10 +192,10 @@ const rubricSchema = {
 					"The data label that will be writen to when the input is changed",
 				),
 		}),
-		tooltip: z.object({
-			recChild: RecursiveObject.describe("Should only be an input"),
-			text: z.string().default("Required text inside tooltip popup"),
-		}),
+		// tooltip: z.object({
+		// 	recChild: RecursiveObject.describe("Should only be an input"),
+		// 	text: z.string().default("Required text inside tooltip popup"),
+		// }),
 		weatherCard: z.object({
 			city: z.string().describe("Default city"),
 			temperature: z.number(),
@@ -203,9 +203,6 @@ const rubricSchema = {
 			low: z.number(),
 			weatherType: z.string(),
 			getterValue: z.string().describe("The data label that will be read"),
-			recChild: RecursiveObject.describe(
-				"Should only be an input or dropdown. Remember to set the type of the component",
-			),
 		}),
 		dropdown: z.object({
 			options: z
@@ -247,50 +244,16 @@ const rubricSchema = {
 				)
 				.describe("The rows of the table"),
 		}),
-		viewer: z
+		layout: z
 			.object({
 				direction: z.enum(["horizontal", "vertical"]).default("horizontal"),
-				left_child: RecursiveObject.describe("Any component, even a viewer"),
-				right_child: RecursiveObject.describe("Any component, even a viewer"),
+				left_child: RecursiveObject.describe("Any component, even a layout"),
+				right_child: RecursiveObject.describe("Any component, even a layout"),
 			})
 			.describe(
-				"Used to show two components side by side. Useful for dashboards. A viewer can be a recursive object",
+				"Used to show two components side by side. Useful for dashboards. A layout can be a recursive object",
 			),
 	},
 };
-
-const generateChildSchema = (): z.ZodUnion<any> => {
-	return z.union(
-		Object.keys(rubricSchema.components).map(
-			(type: string) =>
-				z
-					.object({
-						props: z
-							.lazy(() =>
-								rubricSchema.components[
-									type as keyof typeof rubricSchema.components
-								].extend({
-									type: z.literal(type),
-								}),
-							)
-							.describe(
-								`This component has the schema ${JSON.stringify(rubricSchema.components[type as keyof typeof rubricSchema.components])} Follow it strictly`,
-							),
-					})
-					.optional() as z.ZodTypeAny,
-		) as [z.ZodTypeAny, z.ZodTypeAny, ...z.ZodTypeAny[]],
-	);
-};
-
-for (const key of Object.keys(rubricSchema.components)) {
-	const component =
-		rubricSchema.components[key as keyof typeof rubricSchema.components];
-	if (
-		"recChild" in component.shape &&
-		component.shape.recChild instanceof z.ZodType
-	) {
-		component.shape.recChild = generateChildSchema();
-	}
-}
 
 export { buttonActions, formActionSchema, rubricSchema };
