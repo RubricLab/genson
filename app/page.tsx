@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useUIState, useActions } from "ai/rsc";
 import type { AI } from "./action";
 import { BotMessage, UserMessage } from "@/components/message";
-import { Button, Textarea } from "rubricui";
+import { Textarea } from "rubricui";
 import Dashboard from "./dashboard";
 import {
 	ResizableHandle,
@@ -16,7 +16,7 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 30;
 
 export const initialAIState: {
-	role: "user" | "assistant" | "system" | "function";
+	role: "user" | "assistant" | "system" | "tool";
 	content: string;
 	id?: string;
 	name?: string;
@@ -25,8 +25,9 @@ export const initialAIState: {
 export const initialUIState: {
 	id: number;
 	display: React.ReactNode;
-	role: "user" | "assistant" | "system" | "function";
+	role: "user" | "assistant" | "system" | "tool";
 	text?: string;
+	toolName?: string;
 }[] = [];
 
 export default function Page() {

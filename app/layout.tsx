@@ -1,6 +1,6 @@
 export const dynamic = 'force-dynamic'
 
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { AI } from "./action";
 import "./globals.css";
 import { Toaster } from 'sonner'
