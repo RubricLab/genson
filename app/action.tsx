@@ -17,10 +17,7 @@ import RubricForm from "@/components/rubric/rubric-form";
 import { rubricSchema } from "./schema";
 import RubricTable from "@/components/rubric/rubric-table";
 import RubricLayout from "@/components/rubric/rubric-layout";
-
-function generateId() {
-	return Math.floor(10000 + Math.random() * 90000).toString();
-}
+import { generateId } from 'ai';
 
 async function submitMessage(content: string) {
 	"use server";
