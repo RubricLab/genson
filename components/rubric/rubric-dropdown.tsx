@@ -10,7 +10,7 @@ import {
 import type { z } from "zod";
 import type { rubricSchema } from "@/app/schema";
 import { useSetAtom } from "jotai";
-import dataStore from "./store";
+import dataStore from "../../lib/store";
 
 export default function RubricDropdown({ props, name = "" }: { props: z.infer<typeof rubricSchema.components.dropdown>, name?: string }) {
 	const setDataStore = useSetAtom(dataStore);

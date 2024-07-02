@@ -45,20 +45,27 @@ const FormActions = z.discriminatedUnion("name", [
 	sightSeeingTours,
 	ChatGPTCall,
 	goNuts,
-])
+]);
 
-const formActionSchema: Record<z.infer<typeof FormActions>['name'], ActionType> = {
+const formActionSchema: Record<
+	z.infer<typeof FormActions>["name"],
+	ActionType
+> = {
 	sightSeeingTours: {
 		name: sightSeeingTours.shape.name.value,
 		args: sightSeeingTours.shape.args,
-		fn: z.function()
+		fn: z
+			.function()
 			.args(sightSeeingTours.shape.args)
-			.returns(z.promise(z.object({
-				success: z.boolean(),
-				message: z.string()
-			})))
+			.returns(
+				z.promise(
+					z.object({
+						success: z.boolean(),
+						message: z.string(),
+					}),
+				),
+			)
 			.implement(async (args) => {
-				console.log("Booking sight-seeing tour:", args);
 				await new Promise((resolve) => setTimeout(resolve, 1000));
 				return {
 					success: true,
@@ -69,15 +76,18 @@ const formActionSchema: Record<z.infer<typeof FormActions>['name'], ActionType> 
 	chatGPTCall: {
 		name: ChatGPTCall.shape.name.value,
 		args: ChatGPTCall.shape.args,
-		fn: z.function()
+		fn: z
+			.function()
 			.args(ChatGPTCall.shape.args)
-			.returns(z.promise(z.object({
-				success: z.boolean(),
-				message: z.string()
-			})))
+			.returns(
+				z.promise(
+					z.object({
+						success: z.boolean(),
+						message: z.string(),
+					}),
+				),
+			)
 			.implement(async (args) => {
-				console.log("Calling ChatGPT:", args);
-
 				await new Promise((resolve) => setTimeout(resolve, 1000));
 
 				const openai = new OpenAI({
@@ -110,14 +120,18 @@ const formActionSchema: Record<z.infer<typeof FormActions>['name'], ActionType> 
 	goNuts: {
 		name: goNuts.shape.name.value,
 		args: goNuts.shape.args,
-		fn: z.function()
+		fn: z
+			.function()
 			.args(goNuts.shape.args)
-			.returns(z.promise(z.object({
-				success: z.boolean(),
-				message: z.string()
-			})))
+			.returns(
+				z.promise(
+					z.object({
+						success: z.boolean(),
+						message: z.string(),
+					}),
+				),
+			)
 			.implement(async (args) => {
-				console.log(args);
 				return {
 					success: true,
 					message: `Going nuts: ${JSON.stringify(args)}`,
@@ -144,7 +158,14 @@ const buttonActions = {
 	},
 };
 
-export const rubricSchema = {
+const RecursiveObject = z.object({
+	type: z.string().describe("The type of the component, which is REQUIRED"),
+	props: z.record(z.string(), z.any()),
+});
+
+export type RecursiveType = z.infer<typeof RecursiveObject>;
+
+const rubricSchema = {
 	components: {
 		button: z.object({
 			label: z
@@ -168,7 +189,7 @@ export const rubricSchema = {
 				),
 		}),
 		tooltip: z.object({
-			recChild: z.custom<"Recursive">().describe("Should only be an input"),
+			recChild: RecursiveObject.describe("Should only be an input"),
 			text: z.string().default("Required text inside tooltip popup"),
 		}),
 		weatherCard: z.object({
@@ -178,9 +199,7 @@ export const rubricSchema = {
 			low: z.number(),
 			weatherType: z.string(),
 			getterValue: z.string().describe("The data label that will be read"),
-			recChild: z
-				.custom<"Recursive">()
-				.describe("Should only be an input or dropdown"),
+			recChild: RecursiveObject.describe("Should only be an input or dropdown. Remember to set the type of the component"),
 		}),
 		dropdown: z.object({
 			options: z
@@ -202,7 +221,7 @@ export const rubricSchema = {
 			.object({
 				formAction: FormActions,
 				children: z
-					.array(z.custom<"Recursive">())
+					.array(RecursiveObject)
 					.describe("Use props with type and the args for the component")
 					.describe(
 						"The children of the form. Must be either input or dropdown.  Number of components must match the number of arguments in the formAction",
@@ -248,5 +267,4 @@ for (const key of Object.keys(rubricSchema.components)) {
 	}
 }
 
-export { buttonActions, formActionSchema };
-
+export { buttonActions, formActionSchema, rubricSchema };

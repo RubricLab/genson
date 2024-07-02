@@ -3,8 +3,8 @@
 import type { rubricSchema } from "@/app/schema";
 import type { z } from "zod";
 import { useAtomValue } from "jotai";
-import dataStore from "./store";
-import RubricRecursiveInput from "./rubric-recursive-input";
+import dataStore from "../lib/store";
+import RubricRecursiveInput from "./rubric/rubric-recursive-input";
 
 export default function WeatherCard(
   info: z.infer<typeof rubricSchema.components.weatherCard>
@@ -28,7 +28,7 @@ export default function WeatherCard(
     };
   }
 
-  const randomWeather = getRandomWeather(data[info.getterValue] ?? info.city);
+  const randomWeather = getRandomWeather(data[info.getterValue as string] ?? info.city);
 
   const weatherData = randomWeather || info;
 
@@ -36,7 +36,7 @@ export default function WeatherCard(
     <div className="flex flex-col justify-between w-64 h-64 rounded-2xl p-4 bg-gradient-to-br from-[#667eea] to-[#764ba2] text-primary-foreground">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-lg">{data[info.getterValue] ?? ""}</h1>
+          <h1 className="text-lg">{data[info.getterValue as string] ?? ""}</h1>
           <p className="text-6xl">{weatherData.temperature}°</p>
         </div>
       </div>
@@ -46,7 +46,7 @@ export default function WeatherCard(
         <div className="text-sm">
           <span>H:{weatherData.high}° </span>
           <span>L:{weatherData.low}°</span>
-          <RubricRecursiveInput {...info} />
+          <RubricRecursiveInput {...info.recChild.props} />
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import type React from "react";
 import type { z } from "zod";
 import RubricInput from "./rubric-input";
 import { Button } from "rubricui";
@@ -11,8 +11,6 @@ import { type rubricSchema, formActionSchema } from "@/app/schema";
 export default function RubricForm(
 	props: z.infer<typeof rubricSchema.components.form>,
 ) {
-	console.log(props);
-	
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		const formData = new FormData(e.currentTarget);
@@ -45,16 +43,20 @@ export default function RubricForm(
 						<RubricInput
 							key={child.props.setterValue}
 							name={child.props.setterValue}
-							props={child.props}
+							props={
+								child.props as z.infer<typeof rubricSchema.components.input>
+							}
 						/>
 					);
 				}
-				if (child.props.type == "dropdown" || child.type === "dropdown") {
+				if (child.props.type === "dropdown" || child.type === "dropdown") {
 					return (
 						<RubricDropdown
 							key={child.props.setterValue}
 							name={child.props.setterValue}
-							props={child.props}
+							props={
+								child.props as z.infer<typeof rubricSchema.components.dropdown>
+							}
 						/>
 					);
 				}

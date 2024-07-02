@@ -1,11 +1,11 @@
 import type { z } from "zod";
-import type { rubricSchema } from "@/app/schema";
+import type { RecursiveType, rubricSchema } from "@/app/schema";
 import RubricButton from "./rubric-button";
 import RubricInput from "./rubric-input";
 import RubricDropdown from "./rubric-dropdown";
 
 export default function RubricRecursiveInput(
-	props: z.infer<typeof rubricSchema.components.tooltip>,
+	props: RecursiveType,
 ) {
 
 	if (props.type === "button") {
@@ -22,9 +22,9 @@ export default function RubricRecursiveInput(
 
 	return (
 		<div className="bg-zinc-500/50 border-2 p-2 border-green-500">
-			{props.recChild && (
+			{props.props.recChild && (
 				<RubricRecursiveInput
-					{...props.recChild.props}
+					{...props.props.recChild.props}
 				/>
 			)}
 		</div>
