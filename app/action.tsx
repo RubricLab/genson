@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import { createAI, getMutableAIState, streamUI } from "ai/rsc";
 import { Spinner } from "@/components/spinner";
@@ -12,7 +12,7 @@ import RubricForm from "@/components/rubric/rubric-form";
 import { rubricSchema } from "./schema";
 import RubricTable from "@/components/rubric/rubric-table";
 import RubricLayout from "@/components/rubric/rubric-layout";
-import { generateId } from 'ai';
+import { generateId } from "ai";
 
 async function submitMessage(content: string) {
 	"use server";
@@ -72,6 +72,14 @@ async function submitMessage(content: string) {
 				description: "Show a button",
 				parameters: rubricSchema.components.button,
 				generate: async function* (args) {
+					aiState.done([
+						...aiState.get(),
+						{
+							role: "function",
+							name: "show_button",
+							content: JSON.stringify(args),
+						},
+					]);
 					yield <Spinner />;
 					return <RubricButton {...args} />;
 				},
@@ -80,24 +88,31 @@ async function submitMessage(content: string) {
 				description: "Show an input",
 				parameters: rubricSchema.components.input,
 				generate: async function* (args) {
+					aiState.done([
+						...aiState.get(),
+						{
+							role: "function",
+							name: "show_input",
+							content: JSON.stringify(args),
+						},
+					]);
 					yield <Spinner />;
 					return <RubricInput props={args} />;
 				},
 			},
-			// show_tooltip: {
-			// 	description: "Show a tooltip",
-			// 	parameters: rubricSchema.components.tooltip,
-			// 	generate: async function* (args) {
-			// 		yield <Spinner />;
-			// 		console.log(JSON.stringify(args, null, 2));
-			// 		return <RubricRecursiveBox {...args} />;
-			// 	},
-			// },
 			show_weather_card: {
 				description: "Show a weather card",
 				parameters: rubricSchema.components.weatherCard,
 				generate: async function* (args) {
 					appendIdToNestedProps(args);
+					aiState.done([
+						...aiState.get(),
+						{
+							role: "function",
+							name: "show_weather_card",
+							content: JSON.stringify(args),
+						},
+					]);
 					yield <Spinner />;
 					return <WeatherCard {...args} />;
 				},
@@ -106,6 +121,14 @@ async function submitMessage(content: string) {
 				description: "Show a dropdown",
 				parameters: rubricSchema.components.dropdown,
 				generate: async function* (args) {
+					aiState.done([
+						...aiState.get(),
+						{
+							role: "function",
+							name: "show_dropdown",
+							content: JSON.stringify(args),
+						},
+					]);
 					yield <Spinner />;
 					return <RubricDropdown props={args} />;
 				},
@@ -114,6 +137,14 @@ async function submitMessage(content: string) {
 				description: "Show a form with child components",
 				parameters: rubricSchema.components.form,
 				generate: async function* (args) {
+					aiState.done([
+						...aiState.get(),
+						{
+							role: "function",
+							name: "show_form",
+							content: JSON.stringify(args),
+						},
+					]);
 					console.log(JSON.stringify(args, null, 2));
 					yield <Spinner />;
 					return <RubricForm {...args} />;
@@ -123,6 +154,14 @@ async function submitMessage(content: string) {
 				description: "Show a table",
 				parameters: rubricSchema.components.table,
 				generate: async function* (args) {
+					aiState.done([
+						...aiState.get(),
+						{
+							role: "function",
+							name: "show_table",
+							content: JSON.stringify(args),
+						},
+					]);
 					yield <Spinner />;
 					return <RubricTable {...args} />;
 				},
@@ -131,6 +170,14 @@ async function submitMessage(content: string) {
 				description: "Show a layout",
 				parameters: rubricSchema.components.layout,
 				generate: async function* (args) {
+					aiState.done([
+						...aiState.get(),
+						{
+							role: "function",
+							name: "show_layout",
+							content: JSON.stringify(args),
+						},
+					]);
 					console.log(JSON.stringify(args, null, 2));
 					yield <Spinner />;
 					return <RubricLayout props={args} />;
@@ -139,10 +186,20 @@ async function submitMessage(content: string) {
 		},
 	});
 
+	let text = "";
+	for await (const chunk of result.stream as unknown as Array<any>) {
+		switch (chunk.type) {
+			case "text-delta":
+				text += chunk.textDelta;
+				break;
+		}
+	}
+
 	return {
 		id: generateId(),
 		role: "assistant",
 		display: result.value,
+		text: text,
 	};
 }
 
@@ -156,11 +213,20 @@ const initialAIState: {
 const initialUIState: {
 	id: number;
 	display: React.ReactNode;
+	role: "user" | "assistant" | "system" | "function";
+	text?: string;
 }[] = [];
 
 export const AI = createAI({
 	actions: {
 		submitMessage,
+	},
+	onSetAIState: async ({ state, done }) => {
+		"use server";
+
+		if (done) {
+			// save state
+		}
 	},
 	initialUIState,
 	initialAIState,
