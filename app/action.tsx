@@ -13,6 +13,7 @@ import { rubricSchema } from "./schema";
 import RubricTable from "@/components/rubric/rubric-table";
 import RubricLayout from "@/components/rubric/rubric-layout";
 import { generateId } from "ai";
+import { initialAIState, initialUIState } from './page';
 
 async function submitMessage(content: string) {
 	"use server";
@@ -202,20 +203,6 @@ async function submitMessage(content: string) {
 		text: text,
 	};
 }
-
-const initialAIState: {
-	role: "user" | "assistant" | "system" | "function";
-	content: string;
-	id?: string;
-	name?: string;
-}[] = [];
-
-const initialUIState: {
-	id: number;
-	display: React.ReactNode;
-	role: "user" | "assistant" | "system" | "function";
-	text?: string;
-}[] = [];
 
 export const AI = createAI({
 	actions: {

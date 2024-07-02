@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="bg-black dark">
        <Toaster />
-        <main className="p-4 max-w-2xl">
+        <main className="p-4 h-screen">
           <AI>{children}</AI>
         </main>
       </body>
