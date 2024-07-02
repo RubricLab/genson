@@ -1,12 +1,13 @@
 "use client";
 
-export const dynamic = "force-dynamic"
-
 import { useState } from "react";
 import { useUIState, useActions } from "ai/rsc";
 import type { AI } from "./action";
 import { UserMessage } from "@/components/message";
 import { Button, Input, Textarea } from "rubricui";
+
+export const dynamic = "force-dynamic"
+export const maxDuration = 30
 
 export default function Page() {
   const [inputValue, setInputValue] = useState("");
