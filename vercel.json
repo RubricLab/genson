@@ -1,6 +1,6 @@
 {
     "functions": {
-        "/": {
+        "app/*.tsx": {
             "maxDuration": 300
         }
     }
