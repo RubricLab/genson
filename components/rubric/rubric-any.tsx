@@ -1,13 +1,14 @@
 import type { rubricSchema } from "@/app/schema";
-import React from "react";
 import type { RecursiveType } from "@/app/schema";
-import RubricButton from "./rubric-button";
+import React from "react";
 import type { z } from "zod";
+import WeatherCard from "../weather-card";
+import RubricButton from "./rubric-button";
+import RubricDataTable from "./rubric-data-table";
+import RubricDropdown from "./rubric-dropdown";
+import RubricForm from "./rubric-form";
 import RubricInput from "./rubric-input";
 import RubricLayout from "./rubric-layout";
-import RubricForm from "./rubric-form";
-import WeatherCard from "../weather-card";
-import RubricDropdown from "./rubric-dropdown";
 import RubricTable from "./rubric-table";
 
 const componentMap = {
@@ -32,6 +33,9 @@ const componentMap = {
 	show_table: (props: z.infer<typeof rubricSchema.components.table>) => (
 		<RubricTable {...props} />
 	),
+	show_data_table: (
+		props: z.infer<typeof rubricSchema.components.dataTable>,
+	) => <RubricDataTable {...props} />,
 };
 
 export default function RubricAny(props: RecursiveType) {

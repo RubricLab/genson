@@ -1,5 +1,10 @@
 import { z } from "zod";
-import { fetchTodos, test } from "./server-actions";
+import {
+	fetchTodos,
+	makeChatGPTCall,
+	makeSightSeeingTour,
+	test,
+} from "./server-actions";
 
 const Action = z.object({
 	name: z.string(),
@@ -25,19 +30,18 @@ const QueryAction = Action.extend({
 
 type QueryActionType = z.infer<typeof QueryAction>;
 
-const ChatGPTCall = z.object({
+export const ChatGPTCall = z.object({
 	name: z.literal("chatGPTCall"),
 	args: z.object({
 		message: z.string().describe("The message to send to ChatGPT"),
 	}),
 });
 
-const sightSeeingTours = z.object({
+export const sightSeeingTours = z.object({
 	name: z.literal("sightSeeingTours"),
 	args: z.object({
 		name: z.string(),
 		email: z.string(),
-		participants: z.number(),
 		city: z.string(),
 	}),
 });
@@ -108,10 +112,10 @@ const formActionSchema: Record<
 				),
 			)
 			.implement(async (args) => {
-				await new Promise((resolve) => setTimeout(resolve, 1000));
+				const result = await makeSightSeeingTour(args);
 				return {
 					success: true,
-					message: `Tour booked for ${args.name} (account: ${args.email}) in ${args.city} for ${args.participants} participants.`,
+					message: result,
 				};
 			}),
 	},
@@ -130,11 +134,10 @@ const formActionSchema: Record<
 				),
 			)
 			.implement(async (args) => {
-				await new Promise((resolve) => setTimeout(resolve, 1000));
-
+				const result = await makeChatGPTCall(args);
 				return {
 					success: true,
-					message: "Hello",
+					message: result,
 				};
 			}),
 	},
