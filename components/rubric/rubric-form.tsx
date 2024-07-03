@@ -6,7 +6,8 @@ import RubricInput from "./rubric-input";
 import { Button } from "rubricui";
 import RubricDropdown from "./rubric-dropdown";
 import { toast } from "sonner";
-import { type rubricSchema, formActionSchema } from "@/app/schema";
+import type { rubricSchema } from "@/app/schema";
+import { formActionSchema } from "@/app/schema";
 
 export default function RubricForm(
 	props: z.infer<typeof rubricSchema.components.form>,

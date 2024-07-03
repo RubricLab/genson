@@ -28,9 +28,9 @@ export default function RubricTable(
 			</TableHeader>
 			<TableBody>
 				{props.rows.map((row, index) => (
-					<TableRow key={index}>
+					<TableRow key={index.toString()}>
 						{row.map((cell, index) => (
-							<TableCell key={index}>{cell}</TableCell>
+							<TableCell key={index.toString()}>{cell}</TableCell>
 						))}
 					</TableRow>
 				))}
