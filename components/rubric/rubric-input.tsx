@@ -1,9 +1,9 @@
 "use client";
 
-import type { z } from "zod";
 import type { rubricSchema } from "@/app/schema";
-import { Input } from "rubricui";
 import { useSetAtom } from "jotai";
+import { Input } from "rubricui";
+import type { z } from "zod";
 import dataStore from "../../lib/store";
 
 export default function RubricInput({

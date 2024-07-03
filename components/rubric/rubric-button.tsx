@@ -1,8 +1,8 @@
 "use client";
 
-import type { z } from "zod";
 import { buttonActions, type rubricSchema } from "@/app/schema";
 import { Button } from "rubricui";
+import type { z } from "zod";
 
 export default function RubricButton(
 	props: z.infer<typeof rubricSchema.components.button>,

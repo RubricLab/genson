@@ -1,13 +1,13 @@
 "use client";
 
-import type React from "react";
-import type { z } from "zod";
-import RubricInput from "./rubric-input";
-import { Button } from "rubricui";
-import RubricDropdown from "./rubric-dropdown";
-import { toast } from "sonner";
 import type { rubricSchema } from "@/app/schema";
 import { formActionSchema } from "@/app/schema";
+import type React from "react";
+import { Button } from "rubricui";
+import { toast } from "sonner";
+import type { z } from "zod";
+import RubricDropdown from "./rubric-dropdown";
+import RubricInput from "./rubric-input";
 
 export default function RubricForm(
 	props: z.infer<typeof rubricSchema.components.form>,

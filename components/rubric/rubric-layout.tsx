@@ -1,13 +1,13 @@
-import React from "react";
-import type { z } from "zod";
 import type { rubricSchema } from "@/app/schema";
 import {
 	ResizableHandle,
 	ResizablePanel,
 	ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import RubricAny from "./rubric-any";
 import { cn } from "@/lib/utils";
+import React from "react";
+import type { z } from "zod";
+import RubricAny from "./rubric-any";
 
 export default function RubricLayout({
 	props,

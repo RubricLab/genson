@@ -61,12 +61,13 @@ const rubricSchema = {
 		}),
 		form: z
 			.object({
-				formAction: FormActions,
+				formAction: FormActions.describe(
+					"Remember to use the exact same argument keys in the formAction for the component setterValues in the form",
+				),
 				children: z
 					.array(RecursiveObject)
-					.describe("Use props with type and the args for the component")
 					.describe(
-						"The children of the form. Must be either input or dropdown.  Number of components must match the number of arguments in the formAction",
+						"The children of the form. Must be either input or dropdown. Number of components must match the number of arguments in the formAction",
 					),
 			})
 			.describe(

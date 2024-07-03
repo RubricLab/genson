@@ -2,14 +2,14 @@
 
 export const dynamic = "force-dynamic";
 
-import React, { useState, useEffect } from "react";
-import { useUIState, useAIState } from "ai/rsc";
-import type { AI } from "./action";
-import type { initialUIState } from "./page";
-import { cn } from "@/lib/utils";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 import { CodeIcon, LayoutIcon } from "@radix-ui/react-icons";
 import { TabsContent } from "@radix-ui/react-tabs";
+import { useAIState, useUIState } from "ai/rsc";
+import React, { useState, useEffect } from "react";
+import type { AI } from "./action";
+import type { initialUIState } from "./page";
 
 type Props = {
 	messages: typeof initialUIState;
@@ -41,7 +41,7 @@ export default function Dashboard({ messages }: Props) {
 				</TabsTrigger>
 			</TabsList>
 			<TabsContent value="layout">
-				<div className="border rounded-md p-4 overflow-auto max-h-[70vh] h-fit">
+				<div className="rounded-md p-4 overflow-auto max-h-[70vh] h-fit">
 					{messages
 						.filter(
 							(message) =>

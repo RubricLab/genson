@@ -1,5 +1,6 @@
 "use client";
 
+import type { rubricSchema } from "@/app/schema";
 import {
 	Select,
 	SelectContent,
@@ -7,9 +8,8 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/dropdown";
-import type { z } from "zod";
-import type { rubricSchema } from "@/app/schema";
 import { useSetAtom } from "jotai";
+import type { z } from "zod";
 import dataStore from "../../lib/store";
 
 export default function RubricDropdown({

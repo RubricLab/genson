@@ -1,16 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { useUIState, useActions } from "ai/rsc";
-import type { AI } from "./action";
 import { BotMessage, UserMessage } from "@/components/message";
-import { Textarea } from "rubricui";
-import Dashboard from "./dashboard";
 import {
 	ResizableHandle,
 	ResizablePanel,
 	ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import { useActions, useUIState } from "ai/rsc";
+import { useState } from "react";
+import { Textarea } from "rubricui";
+import type { AI } from "./action";
+import Dashboard from "./dashboard";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;

@@ -1,4 +1,4 @@
-import React from "react";
+import type { rubricSchema } from "@/app/schema";
 import {
 	Table,
 	TableBody,
@@ -8,8 +8,8 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import React from "react";
 import type { z } from "zod";
-import type { rubricSchema } from "@/app/schema";
 
 export default async function RubricTable(
 	props: z.infer<typeof rubricSchema.components.table>,

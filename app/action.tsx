@@ -1,20 +1,20 @@
 "use server";
 
-import { createAI, getMutableAIState, streamUI } from "ai/rsc";
-import { Spinner } from "@/components/spinner";
 import { BotMessage } from "@/components/message";
 import RubricButton from "@/components/rubric/rubric-button";
+import RubricDataTable from "@/components/rubric/rubric-data-table";
+import RubricForm from "@/components/rubric/rubric-form";
 import RubricInput from "@/components/rubric/rubric-input";
+import RubricLayout from "@/components/rubric/rubric-layout";
+import RubricTable from "@/components/rubric/rubric-table";
+import { Spinner } from "@/components/spinner";
 import WeatherCard from "@/components/weather-card";
 import { anthropic } from "@ai-sdk/anthropic";
-import RubricDropdown from "../components/rubric/rubric-dropdown";
-import RubricForm from "@/components/rubric/rubric-form";
-import { rubricSchema } from "./schema";
-import RubricTable from "@/components/rubric/rubric-table";
-import RubricLayout from "@/components/rubric/rubric-layout";
 import { generateId } from "ai";
+import { createAI, getMutableAIState, streamUI } from "ai/rsc";
+import RubricDropdown from "../components/rubric/rubric-dropdown";
 import { initialAIState, initialUIState } from "./page";
-import RubricDataTable from "@/components/rubric/rubric-data-table";
+import { rubricSchema } from "./schema";
 
 async function submitMessage(content: string) {
 	"use server";

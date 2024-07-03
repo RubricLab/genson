@@ -1,4 +1,4 @@
-import React from "react";
+import { queryActions, type rubricSchema } from "@/app/schema";
 import {
 	Table,
 	TableBody,
@@ -8,8 +8,8 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import React from "react";
 import type { z } from "zod";
-import { queryActions, type rubricSchema } from "@/app/schema";
 
 export default async function RubricDataTable(
 	props: z.infer<typeof rubricSchema.components.dataTable>,
@@ -17,7 +17,7 @@ export default async function RubricDataTable(
 	const data = await queryActions[props.dataAPI.name].fn(props.dataAPI.args);
 
 	return (
-		<Table>
+		<Table className="overflow-auto">
 			{props.caption && <TableCaption>{props.caption}</TableCaption>}
 			<TableHeader>
 				<TableRow>

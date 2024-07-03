@@ -6,7 +6,8 @@
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
-		"lint": "next lint"
+		"lint": "next lint",
+		"format": "biome check --write app"
 	},
 	"dependencies": {
 		"@ai-sdk/anthropic": "^0.0.27",

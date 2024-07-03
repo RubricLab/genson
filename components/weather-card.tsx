@@ -1,8 +1,8 @@
 "use client";
 
 import type { rubricSchema } from "@/app/schema";
-import type { z } from "zod";
 import { useAtomValue } from "jotai";
+import type { z } from "zod";
 import dataStore from "../lib/store";
 
 export default function WeatherCard(
