@@ -21,7 +21,9 @@ export default function Dashboard({ messages }: Props) {
 
 	useEffect(() => {
 		setFocusedId(
-			messages.filter((message) => message.role === "assistant").pop()?.id || 0,
+			messages
+				.filter((message) => message.role === "assistant" && message.toolName)
+				.pop()?.id || 0,
 		);
 	}, [messages]);
 
@@ -53,15 +55,24 @@ export default function Dashboard({ messages }: Props) {
 					))}
 			</TabsContent>
 			<TabsContent value="code">
-				{aiState
-					.filter(
-						(message) => message.id === focusedId && message.role === "tool",
-					)
-					.map((message) => (
-						<div key={message.id}>
-							<div>{JSON.stringify(JSON.parse(message.content), null, 2)}</div>
-						</div>
-					))}
+				<div className="border rounded-md p-4 overflow-auto h-[90vh]">
+					{aiState
+						.filter(
+							(message) => message.id === focusedId && message.role === "tool",
+						)
+						.map((message) => (
+							<code
+								key={message.id}
+								className="w-full whitespace-pre text-sm flex"
+							>
+								{JSON.stringify(
+									{ toolName: message?.name, ...JSON.parse(message.content) },
+									null,
+									2,
+								)}
+							</code>
+						))}
+				</div>
 			</TabsContent>
 			<div className="absolute bottom-0 flex m-4 gap-2 text-sm">
 				{messages

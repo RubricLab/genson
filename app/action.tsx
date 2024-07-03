@@ -60,7 +60,7 @@ async function submitMessage(content: string) {
 			{
 				role: "user",
 				content:
-					"For components that must share data, the setterValue of the child and the getterValue of the parent must be the same. For example, this could be a input field changing something in a parent box, etc. Also, in forms, the number of arguments in the formAction must match the number of components in the form.",
+					"Unless, the user says anything, If the user did not specify what to add for a component prop (ex: button name, form action, etc.), ask for clarification. For components that must share data, the setterValue of the child and the getterValue of the parent must be the same. For example, this could be a input field changing something in a parent box, etc. Also, in forms, the number of arguments in the formAction must match the number of components in the form.",
 			},
 			{
 				role: "assistant",
@@ -95,6 +95,7 @@ async function submitMessage(content: string) {
 					aiState.done([
 						...aiState.get(),
 						{
+							id: id,
 							role: "tool",
 							name: "show_button",
 							content: JSON.stringify(args),
@@ -111,6 +112,7 @@ async function submitMessage(content: string) {
 					aiState.done([
 						...aiState.get(),
 						{
+							id: id,
 							role: "tool",
 							name: "show_input",
 							content: JSON.stringify(args),
@@ -128,6 +130,7 @@ async function submitMessage(content: string) {
 					aiState.done([
 						...aiState.get(),
 						{
+							id: id,
 							role: "tool",
 							name: "show_weather_card",
 							content: JSON.stringify(args),
@@ -144,6 +147,7 @@ async function submitMessage(content: string) {
 					aiState.done([
 						...aiState.get(),
 						{
+							id: id,
 							role: "tool",
 							name: "show_dropdown",
 							content: JSON.stringify(args),
@@ -160,6 +164,7 @@ async function submitMessage(content: string) {
 					aiState.done([
 						...aiState.get(),
 						{
+							id: id,
 							role: "tool",
 							name: "show_form",
 							content: JSON.stringify(args),
@@ -177,6 +182,7 @@ async function submitMessage(content: string) {
 					aiState.done([
 						...aiState.get(),
 						{
+							id: id,
 							role: "tool",
 							name: "show_table",
 							content: JSON.stringify(args),

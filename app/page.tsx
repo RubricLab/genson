@@ -46,7 +46,7 @@ export default function Page() {
 		<ResizablePanelGroup direction="horizontal" className="rounded-lg border">
 			<ResizablePanel defaultSize={50}>
 				<div className="flex flex-col space-y-4 justify-end h-full p-4">
-					<div className="flex flex-col space-y-4 flex-1">
+					<div className="flex flex-col space-y-4 flex-1 overflow-y-auto">
 						{messages.map((message) => (
 							<div key={message.id}>
 								{message.role === "user" ? (
@@ -97,7 +97,7 @@ export default function Page() {
 			</ResizablePanel>
 			<ResizableHandle withHandle />
 			<ResizablePanel defaultSize={75} maxSize={80} minSize={70}>
-				{messages.length > -1 && <Dashboard messages={messages} />}
+				{messages.length > 0 && <Dashboard messages={messages} />}
 			</ResizablePanel>
 		</ResizablePanelGroup>
 	);
