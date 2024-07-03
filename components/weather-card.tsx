@@ -1,6 +1,6 @@
 "use client";
 
-import type { rubricSchema } from "@/app/action/schema";
+import type { rubricSchema } from "@/app/schema";
 import type { z } from "zod";
 import { useAtomValue } from "jotai";
 import dataStore from "../lib/store";
