@@ -9,11 +9,13 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import type { z } from "zod";
-import type { rubricSchema } from "@/app/schema";
+import { queryActions, type rubricSchema } from "@/app/schema";
 
-export default async function RubricTable(
-	props: z.infer<typeof rubricSchema.components.table>,
+export default async function RubricDataTable(
+	props: z.infer<typeof rubricSchema.components.dataTable>,
 ) {
+	const data = await queryActions[props.dataAPI.name].fn(props.dataAPI.args);
+
 	return (
 		<Table>
 			{props.caption && <TableCaption>{props.caption}</TableCaption>}
@@ -25,10 +27,10 @@ export default async function RubricTable(
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				{props.rows.map((row, index) => (
+				{data.map((row: unknown, index: number) => (
 					<TableRow key={index.toString()}>
-						{row.map((cell, index) => (
-							<TableCell key={index.toString()}>{cell}</TableCell>
+						{props.columns.map((column, cellIndex) => (
+							<TableCell key={`${index}-${cellIndex}`}>{row[column]}</TableCell>
 						))}
 					</TableRow>
 				))}

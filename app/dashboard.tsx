@@ -41,18 +41,20 @@ export default function Dashboard({ messages }: Props) {
 				</TabsTrigger>
 			</TabsList>
 			<TabsContent value="layout">
-				{messages
-					.filter(
-						(message) =>
-							message.role === "assistant" &&
-							message.id === focusedId &&
-							message.toolName,
-					)
-					.map((message) => (
-						<div key={message.id}>
-							<div>{message.display}</div>
-						</div>
-					))}
+				<div className="border rounded-md p-4 overflow-auto max-h-[70vh] h-fit">
+					{messages
+						.filter(
+							(message) =>
+								message.role === "assistant" &&
+								message.id === focusedId &&
+								message.toolName,
+						)
+						.map((message) => (
+							<div key={message.id}>
+								<div>{message.display}</div>
+							</div>
+						))}
+				</div>
 			</TabsContent>
 			<TabsContent value="code">
 				<div className="border rounded-md p-4 overflow-auto max-h-[70vh] h-fit">

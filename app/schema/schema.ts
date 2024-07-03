@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { FormActions } from "./actions";
+import { FormActions, QueryActions } from "./actions";
 
 const RecursiveObject = z.object({
 	type: z
@@ -82,6 +82,17 @@ const rubricSchema = {
 						.describe("Must be the same length as the columns"),
 				)
 				.describe("The rows of the table"),
+		}),
+		dataTable: z.object({
+			caption: z.string().optional().describe("The caption of the table"),
+			dataAPI: QueryActions.describe(
+				"The server action to fetch the data from",
+			),
+			columns: z
+				.array(z.string())
+				.describe(
+					"The columns names to use for the table. Must be based on the schema of the dataAPI",
+				),
 		}),
 		layout: z
 			.object({

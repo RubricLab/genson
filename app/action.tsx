@@ -14,6 +14,7 @@ import RubricTable from "@/components/rubric/rubric-table";
 import RubricLayout from "@/components/rubric/rubric-layout";
 import { generateId } from "ai";
 import { initialAIState, initialUIState } from "./page";
+import RubricDataTable from "@/components/rubric/rubric-data-table";
 
 async function submitMessage(content: string) {
 	"use server";
@@ -176,6 +177,25 @@ async function submitMessage(content: string) {
 					]);
 					yield <Spinner />;
 					return <RubricTable {...args} />;
+				},
+			},
+			show_data_table: {
+				description: "Show a data table with data fetched from an API",
+				parameters: rubricSchema.components.dataTable,
+				generate: async function* (args) {
+					aiState.done([
+						...aiState.get(),
+						{
+							id: id,
+							role: "tool",
+							name: "show_data_table",
+							content: JSON.stringify(args),
+						},
+					]);
+					console.log("data table");
+					console.log(JSON.stringify(args, null, 2));
+					yield <Spinner />;
+					return <RubricDataTable {...args} />;
 				},
 			},
 			show_layout: {

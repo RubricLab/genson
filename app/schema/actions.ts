@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { test } from "./server-actions";
+import { fetchTodos, test } from "./server-actions";
 
 const Action = z.object({
 	name: z.string(),
@@ -18,6 +18,12 @@ const Action = z.object({
 });
 
 type ActionType = z.infer<typeof Action>;
+
+const QueryAction = Action.extend({
+	fn: z.function().args(z.any()).returns(z.any()),
+});
+
+type QueryActionType = z.infer<typeof QueryAction>;
 
 const ChatGPTCall = z.object({
 	name: z.literal("chatGPTCall"),
@@ -41,10 +47,46 @@ export const goNuts = z.object({
 	args: z.record(z.any()),
 });
 
+export const fetchTodosSchema = z.object({
+	name: z.literal("fetchTodos"),
+	args: z.object({
+		postId: z.number().optional(),
+	}),
+	returns: z
+		.array(
+			z.object({
+				userId: z.number(),
+				id: z.number(),
+				title: z.string(),
+				body: z.string(),
+			}),
+		)
+		.describe("The resolved promise of the fetchTodos action"),
+});
+
 const FormActions = z.discriminatedUnion("name", [
 	sightSeeingTours,
 	ChatGPTCall,
 	goNuts,
+]);
+
+function genSchemaDesc(schema: z.ZodObject<any, any, any>) {
+	const keys = Object.keys(schema.shape);
+	const types = keys.map((key) => schema.shape[key]);
+
+	return Object.fromEntries(
+		keys.map((key, index) => [key, types[index]._def.typeName]),
+	);
+}
+
+const QueryActions = z.discriminatedUnion("name", [
+	fetchTodosSchema
+		.omit({ returns: true })
+		.describe(
+			`Returns values with the following schema: ${JSON.stringify(
+				genSchemaDesc(fetchTodosSchema.shape.returns.element),
+			)}`,
+		),
 ]);
 
 const formActionSchema: Record<
@@ -112,6 +154,24 @@ const formActionSchema: Record<
 	},
 };
 
+const queryActions: Record<
+	z.infer<typeof QueryActions>["name"],
+	QueryActionType
+> = {
+	fetchTodos: {
+		name: fetchTodosSchema.shape.name.value,
+		args: fetchTodosSchema.shape.args,
+		fn: z
+			.function()
+			.args(fetchTodosSchema.shape.args)
+			.returns(z.promise(fetchTodosSchema.shape.returns))
+			.implement(async (args) => {
+				const result = await fetchTodos(args);
+				return result;
+			}),
+	},
+};
+
 const buttonActions = {
 	closeApp: () => {
 		alert("Closing App");
@@ -130,4 +190,10 @@ const buttonActions = {
 	},
 };
 
-export { buttonActions, formActionSchema, FormActions };
+export {
+	buttonActions,
+	formActionSchema,
+	FormActions,
+	queryActions,
+	QueryActions,
+};
