@@ -38,7 +38,7 @@ export default function RubricForm(
 			className="flex flex-col gap-5"
 		>
 			{props.children.map((child) => {
-				if (child.props.type === "input" || child.type === "input") {
+				if (child.props.type === "show_input" || child.type === "show_input") {
 					return (
 						<RubricInput
 							key={child.props.setterValue}
@@ -49,7 +49,7 @@ export default function RubricForm(
 						/>
 					);
 				}
-				if (child.props.type === "dropdown" || child.type === "dropdown") {
+				if (child.props.type === "show_dropdown" || child.type === "show_dropdown") {
 					return (
 						<RubricDropdown
 							key={child.props.setterValue}

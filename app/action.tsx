@@ -41,7 +41,7 @@ async function submitMessage(content: string) {
 	const result = await streamUI({
 		model: anthropic("claude-3-5-sonnet-20240620"),
 		system:
-			"You are a powerful component rendering assistant that can render nested components too. Whenever you make a tool call, a new message will be appended to history saying TOOL CALL. DO NOT WRITE THIS YOURSELF, just use the tools! If the user asks you to render a component, then just do that, DO NOT GIVE A DESCRIPTION OF WHAT YOU ARE DOING. JUST RENDER THE COMPONENT. Use the context of the conversation to iteratively improve/update the component. If a component is allowed to have a nested component, it's provided schema will have a prop labeled recChild which which can take on the props of any component. Ex: { type: 'show_tooltip', props: { text: 'hello', recChild: { type: 'show_tooltip', props: { text: 'world', recChild: null } } } }. If a prop is not marked as optional, then it is imperative that you include it in the response or else the project will crash. Lastly, if the user doesn't give you required data values for a component, just fill in random ones. RecChild must have a type and props, which is the args for the nested component",
+			"You are a powerful component rendering assistant that can render nested components too. Whenever you make a tool call, a new message will be appended to history saying TOOL CALL. DO NOT WRITE THIS YOURSELF, just use the tools! If the user asks you to render a component, then just do that, DO NOT GIVE A DESCRIPTION OF WHAT YOU ARE DOING. JUST RENDER THE COMPONENT. Use the context of the conversation to iteratively improve/update the component.",
 		messages: [
 			{
 				role: "user",
