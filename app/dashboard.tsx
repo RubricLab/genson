@@ -55,7 +55,7 @@ export default function Dashboard({ messages }: Props) {
 					))}
 			</TabsContent>
 			<TabsContent value="code">
-				<div className="border rounded-md p-4 overflow-auto h-[90vh]">
+				<div className="border rounded-md p-4 overflow-auto max-h-[70vh] h-fit">
 					{aiState
 						.filter(
 							(message) => message.id === focusedId && message.role === "tool",
