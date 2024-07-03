@@ -50,7 +50,10 @@ export default function RubricForm(
 						/>
 					);
 				}
-				if (child.props.type === "show_dropdown" || child.type === "show_dropdown") {
+				if (
+					child.props.type === "show_dropdown" ||
+					child.type === "show_dropdown"
+				) {
 					return (
 						<RubricDropdown
 							key={child.props.setterValue}

@@ -1,7 +1,7 @@
 {
-    "functions": {
-        "app/*.tsx": {
-            "maxDuration": 30
-        }
-    }
+	"functions": {
+		"app/*.tsx": {
+			"maxDuration": 30
+		}
+	}
 }

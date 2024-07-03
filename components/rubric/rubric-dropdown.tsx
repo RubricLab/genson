@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
 	Select,
@@ -12,7 +12,10 @@ import type { rubricSchema } from "@/app/schema";
 import { useSetAtom } from "jotai";
 import dataStore from "../../lib/store";
 
-export default function RubricDropdown({ props, name = "" }: { props: z.infer<typeof rubricSchema.components.dropdown>, name?: string }) {
+export default function RubricDropdown({
+	props,
+	name = "",
+}: { props: z.infer<typeof rubricSchema.components.dropdown>; name?: string }) {
 	const setDataStore = useSetAtom(dataStore);
 
 	function handleValueChange(value: string) {
@@ -21,16 +24,20 @@ export default function RubricDropdown({ props, name = "" }: { props: z.infer<ty
 		}
 	}
 
-    return (
-	<Select name={name} onValueChange={(value) => handleValueChange(value)}>
-		<SelectTrigger className="w-[180px]">
-			<SelectValue placeholder={props.placeholder} />
-		</SelectTrigger>
-		<SelectContent>
-			{props.options.map((option: {label: string, value: string}, index: number) => (
-				<SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
-			))}
-		</SelectContent>
-	</Select>
-    )
+	return (
+		<Select name={name} onValueChange={(value) => handleValueChange(value)}>
+			<SelectTrigger className="w-[180px]">
+				<SelectValue placeholder={props.placeholder} />
+			</SelectTrigger>
+			<SelectContent>
+				{props.options.map(
+					(option: { label: string; value: string }, index: number) => (
+						<SelectItem key={option.value} value={option.value}>
+							{option.label}
+						</SelectItem>
+					),
+				)}
+			</SelectContent>
+		</Select>
+	);
 }
