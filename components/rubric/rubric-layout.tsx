@@ -29,7 +29,7 @@ export default function RubricLayout({
 				defaultSize={50}
 				className={cn(
 					"flex flex-col items-center justify-center",
-					props.left_child.type !== "layout" ? "p-5" : "",
+					props.left_child.type !== "show_layout" ? "p-5" : "",
 				)}
 			>
 				<RubricAny {...props.left_child} />
@@ -39,7 +39,7 @@ export default function RubricLayout({
 				defaultSize={50}
 				className={cn(
 					"flex flex-col items-center justify-center",
-					props.right_child.type !== "layout" ? "p-5" : "",
+					props.right_child.type !== "show_layout" ? "p-5" : "",
 				)}
 			>
 				<RubricAny {...props.right_child} />

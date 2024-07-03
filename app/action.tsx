@@ -38,20 +38,6 @@ async function submitMessage(content: string) {
 		}
 	}
 
-	console.log([
-		{
-			role: "user",
-			content:
-				"For components that must share data, the setterValue of the child and the getterValue of the parent must be the same. For example, this could be a input field changing something in a parent box, etc. Also, in forms, the number of arguments in the formAction must match the number of components in the form.",
-		},
-		{
-			role: "assistant",
-			content:
-				"I'll be sure to remember that for you and make sure that the setterValue of the child and the getterValue of the parent are the same for components that must share data and that the number of arguments in the formAction must match the number of components in the form.",
-		},
-		...aiState.get(),
-	]);
-
 	const result = await streamUI({
 		model: anthropic("claude-3-5-sonnet-20240620"),
 		system:
@@ -68,7 +54,7 @@ async function submitMessage(content: string) {
 					"I'll be sure to remember that for you and make sure that the setterValue of the child and the getterValue of the parent are the same for components that must share data and that the number of arguments in the formAction must match the number of components in the form.",
 			},
 			// TODO: find better way to do this with Claude Sonnet. Issue: Tool_use
-			...(aiState.get() as typeof initialAIState).slice(-3).map((message) => ({
+			...(aiState.get() as typeof initialAIState).slice(-5).map((message) => ({
 				...message,
 				role: message.role === "tool" ? "assistant" : message.role,
 				content: message.content,

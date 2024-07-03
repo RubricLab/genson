@@ -162,7 +162,7 @@ const RecursiveObject = z.object({
 	type: z
 		.string()
 		.describe(
-			"The type of the component, which is REQUIRED. Do not include the word 'show', just the component name please. ex: button, layout, input, ... and use underscore for spaces",
+			"The type of the component, which is REQUIRED. Remember to include the word 'show', ex: show_button, show_layout, show_input, ... and use underscore for spaces",
 		),
 	props: z.record(z.string(), z.any()),
 });
@@ -192,10 +192,6 @@ const rubricSchema = {
 					"The data label that will be writen to when the input is changed",
 				),
 		}),
-		// tooltip: z.object({
-		// 	recChild: RecursiveObject.describe("Should only be an input"),
-		// 	text: z.string().default("Required text inside tooltip popup"),
-		// }),
 		weatherCard: z.object({
 			city: z.string().describe("Default city"),
 			temperature: z.number(),

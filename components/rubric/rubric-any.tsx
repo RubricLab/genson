@@ -11,25 +11,25 @@ import RubricDropdown from "./rubric-dropdown";
 import RubricTable from "./rubric-table";
 
 const componentMap = {
-	button: (props: z.infer<typeof rubricSchema.components.button>) => (
+	show_button: (props: z.infer<typeof rubricSchema.components.button>) => (
 		<RubricButton {...props} />
 	),
-	input: (props: z.infer<typeof rubricSchema.components.input>) => (
+	show_input: (props: z.infer<typeof rubricSchema.components.input>) => (
 		<RubricInput props={props} />
 	),
-	layout: (props: z.infer<typeof rubricSchema.components.layout>) => (
+	show_layout: (props: z.infer<typeof rubricSchema.components.layout>) => (
 		<RubricLayout props={props} parent={false} />
 	),
-	form: (props: z.infer<typeof rubricSchema.components.form>) => (
+	show_form: (props: z.infer<typeof rubricSchema.components.form>) => (
 		<RubricForm {...props} />
 	),
-	weather_card: (
+	show_weather_card: (
 		props: z.infer<typeof rubricSchema.components.weatherCard>,
 	) => <WeatherCard {...props} />,
-	dropdown: (props: z.infer<typeof rubricSchema.components.dropdown>) => (
+	show_dropdown: (props: z.infer<typeof rubricSchema.components.dropdown>) => (
 		<RubricDropdown props={props} />
 	),
-	table: (props: z.infer<typeof rubricSchema.components.table>) => (
+	show_table: (props: z.infer<typeof rubricSchema.components.table>) => (
 		<RubricTable {...props} />
 	),
 };
