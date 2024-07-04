@@ -4,8 +4,23 @@ import {
 	makeChatGPTCall,
 	makeSightSeeingTour,
 	test,
-	createImage
+	createImage,
 } from "./server-actions";
+import { unstable_cache } from "next/cache";
+
+const getCachedResult = <T, A extends any[]>(
+	fn: (...args: A) => Promise<T>,
+	args: A,
+) => {
+	return unstable_cache(
+		async () => {
+			const result = await fn(...args);
+			return result;
+		},
+		[JSON.stringify(args), fn.name],
+		{ revalidate: false },
+	)();
+};
 
 const Action = z.object({
 	name: z.string(),
@@ -189,7 +204,7 @@ const queryActions: Record<
 			.args(fetchTodosSchema.shape.args)
 			.returns(z.promise(fetchTodosSchema.shape.returns))
 			.implement(async (args) => {
-				const result = await fetchTodos(args);
+				const result = await getCachedResult(fetchTodos, [args]);
 				return result;
 			}),
 	},
@@ -201,7 +216,7 @@ const queryActions: Record<
 			.args(createImageSchema.shape.args)
 			.returns(z.promise(createImageSchema.shape.returns))
 			.implement(async (args) => {
-				const result = await createImage(args);
+				const result = await getCachedResult(createImage, [args]);
 				return result;
 			}),
 	},
