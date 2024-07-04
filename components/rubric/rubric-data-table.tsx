@@ -21,17 +21,23 @@ export default async function RubricDataTable(
 			{props.caption && <TableCaption>{props.caption}</TableCaption>}
 			<TableHeader>
 				<TableRow>
-					{props.columns.map((column, index) => (
-						<TableHead key={column}>{column}</TableHead>
-					))}
+					{Object.keys(data[0])
+						.filter((key) => !props.columns_to_remove.includes(key))
+						.map((column, index) => (
+							<TableHead key={column}>{column}</TableHead>
+						))}
 				</TableRow>
 			</TableHeader>
 			<TableBody>
 				{data.map((row: any, index: number) => (
 					<TableRow key={index.toString()}>
-						{props.columns.map((column, cellIndex) => (
-							<TableCell key={`${index}-${cellIndex.toString()}`}>{row[column]}</TableCell>
-						))}
+						{Object.keys(row)
+							.filter((key) => !props.columns_to_remove.includes(key))
+							.map((column, cellIndex) => (
+								<TableCell key={`${index}-${cellIndex.toString()}`}>
+									{row[column]}
+								</TableCell>
+							))}
 					</TableRow>
 				))}
 			</TableBody>

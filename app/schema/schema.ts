@@ -89,10 +89,10 @@ const rubricSchema = {
 			dataAPI: QueryActions.describe(
 				"The server action to fetch the data from",
 			),
-			columns: z
+			columns_to_remove: z
 				.array(z.string())
 				.describe(
-					"The columns names to use for the table. Must be based on the schema of the dataAPI",
+					"The columns names to remove from the table. Must be based on the returns schema of the dataAPI",
 				),
 		}),
 		layout: z
