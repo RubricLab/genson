@@ -30,7 +30,7 @@ export default async function RubricDataTable(
 				{data.map((row: any, index: number) => (
 					<TableRow key={index.toString()}>
 						{props.columns.map((column, cellIndex) => (
-							<TableCell key={`${index}-${cellIndex}`}>{row[column]}</TableCell>
+							<TableCell key={`${index}-${cellIndex.toString()}`}>{row[column]}</TableCell>
 						))}
 					</TableRow>
 				))}

@@ -45,6 +45,11 @@ export async function makeSightSeeingTour(
 	return `Tour booked for ${args.name} (account: ${args.email}) in ${args.city}`;
 }
 
+
+type FalResult = {
+	images?: { url: string; width: number; height: number }[];
+};
+
 export async function createImage(
 	args: z.infer<typeof createImageSchema.shape.args>,
 ): Promise<z.infer<typeof createImageSchema.shape.returns>> {
@@ -53,7 +58,7 @@ export async function createImage(
 		credentials: process.env.FAL_AI_API_KEY,
 	});
 
-	const result = await fal.subscribe("fal-ai/fast-sdxl", {
+	const result: FalResult = await fal.subscribe("fal-ai/fast-sdxl", {
 		input: {
 		  prompt: args.prompt
 		},
@@ -65,10 +70,8 @@ export async function createImage(
 		},
 	});
 
-	console.log(result)
-
-	if (!result) {
-		throw new Error("No result");
+	if (!result || !result.images || result.images.length === 0) {
+		throw new Error("No result or images not found");
 	}
 
 

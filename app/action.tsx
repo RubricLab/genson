@@ -63,7 +63,8 @@ async function submitMessage(content: string) {
 			})),
 		],
 
-		text: ({ content, done }) => {
+		text: async function* ({ content, done }) {
+			yield <Spinner />;
 			if (done) {
 				aiState.done([
 					...aiState.get(),
@@ -73,7 +74,7 @@ async function submitMessage(content: string) {
 					},
 				]);
 			}
-			return <div>{content}</div>;
+			return <Spinner />;
 		},
 		tools: {
 			show_button: {
