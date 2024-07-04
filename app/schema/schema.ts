@@ -104,6 +104,9 @@ const rubricSchema = {
 			.describe(
 				"Used to show two components side by side. Useful for dashboards. A layout can be a recursive object",
 			),
+		markdown: z.object({
+			markdown: z.string().describe("The markdown to render"),
+		}),
 	},
 };
 

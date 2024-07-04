@@ -62,6 +62,6 @@ const config: Config = {
 		},
 	},
 	presets: [require("./rubric.preset.ts")],
-	plugins: [],
+	plugins: [require("@tailwindcss/typography")],
 };
 export default config;

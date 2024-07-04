@@ -10,6 +10,7 @@ import RubricForm from "./rubric-form";
 import RubricInput from "./rubric-input";
 import RubricLayout from "./rubric-layout";
 import RubricTable from "./rubric-table";
+import RubricMarkdown from "./rubric-markdown";
 
 const componentMap = {
 	show_button: (props: z.infer<typeof rubricSchema.components.button>) => (
@@ -36,6 +37,9 @@ const componentMap = {
 	show_data_table: (
 		props: z.infer<typeof rubricSchema.components.dataTable>,
 	) => <RubricDataTable {...props} />,
+	show_markdown: (props: z.infer<typeof rubricSchema.components.markdown>) => (
+		<RubricMarkdown>{props.markdown}</RubricMarkdown>
+	),
 };
 
 export default function RubricAny(props: RecursiveType) {

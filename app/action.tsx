@@ -15,6 +15,7 @@ import { createAI, getMutableAIState, streamUI } from "ai/rsc";
 import RubricDropdown from "../components/rubric/rubric-dropdown";
 import { initialAIState, initialUIState } from "./page";
 import { rubricSchema } from "./schema";
+import RubricMarkdown from "@/components/rubric/rubric-markdown";
 
 async function submitMessage(content: string) {
 	"use server";
@@ -214,6 +215,24 @@ async function submitMessage(content: string) {
 					console.log(JSON.stringify(args, null, 2));
 					yield <Spinner />;
 					return <RubricLayout props={args} />;
+				},
+			},
+			show_markdown: {
+				description: "Render markdown as HTML. Use * for bullet points.",
+				parameters: rubricSchema.components.markdown,
+				generate: async function* (args) {
+					aiState.done([
+						...aiState.get(),
+						{
+							id: id,
+							role: "tool",
+							name: "show_markdown",
+							content: JSON.stringify(args),
+						},
+					]);
+					yield <Spinner />;
+					console.log(args.markdown);
+					return <RubricMarkdown>{args.markdown}</RubricMarkdown>;
 				},
 			},
 		},
