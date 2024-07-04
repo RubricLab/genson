@@ -54,7 +54,7 @@ export const goNuts = z.object({
 export const fetchTodosSchema = z.object({
 	name: z.literal("fetchTodos"),
 	args: z.object({
-		postId: z.number().optional(),
+		postId: z.number().optional().describe("If render all posts, leave empty"),
 	}),
 	returns: z
 		.array(
