@@ -4,6 +4,7 @@ import {
 	makeChatGPTCall,
 	makeSightSeeingTour,
 	test,
+	createImage
 } from "./server-actions";
 
 const Action = z.object({
@@ -68,6 +69,18 @@ export const fetchTodosSchema = z.object({
 		.describe("The resolved promise of the fetchTodos action"),
 });
 
+export const createImageSchema = z.object({
+	name: z.literal("createImage"),
+	args: z.object({
+		prompt: z.string(),
+	}),
+	returns: z.object({
+		url: z.string(),
+		width: z.number(),
+		height: z.number(),
+	}),
+});
+
 const FormActions = z.discriminatedUnion("name", [
 	sightSeeingTours,
 	ChatGPTCall,
@@ -89,6 +102,13 @@ const QueryActions = z.discriminatedUnion("name", [
 		.describe(
 			`Returns values with the following schema: ${JSON.stringify(
 				genSchemaDesc(fetchTodosSchema.shape.returns.element),
+			)}`,
+		),
+	createImageSchema
+		.omit({ returns: true })
+		.describe(
+			`Returns values with the following schema: ${JSON.stringify(
+				genSchemaDesc(createImageSchema.shape.returns),
 			)}`,
 		),
 ]);
@@ -170,6 +190,18 @@ const queryActions: Record<
 			.returns(z.promise(fetchTodosSchema.shape.returns))
 			.implement(async (args) => {
 				const result = await fetchTodos(args);
+				return result;
+			}),
+	},
+	createImage: {
+		name: createImageSchema.shape.name.value,
+		args: createImageSchema.shape.args,
+		fn: z
+			.function()
+			.args(createImageSchema.shape.args)
+			.returns(z.promise(createImageSchema.shape.returns))
+			.implement(async (args) => {
+				const result = await createImage(args);
 				return result;
 			}),
 	},

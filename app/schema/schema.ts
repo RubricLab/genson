@@ -5,7 +5,7 @@ const RecursiveObject = z.object({
 	type: z
 		.string()
 		.describe(
-			"The type of the component, which is REQUIRED. Remember to include the word 'show', ex: show_button, show_layout, show_input, ... and use underscore for spaces",
+			"The type of the component, which is REQUIRED. Remember to include the word 'show', ex: show_button, show_layout, show_input, show_ai_image ... and use underscore for spaces",
 		),
 	props: z.record(z.string(), z.any()),
 });
@@ -106,6 +106,9 @@ const rubricSchema = {
 			),
 		markdown: z.object({
 			markdown: z.string().describe("The markdown to render"),
+		}),
+		ai_image: z.object({
+			prompt: z.string().describe("The prompt to generate the image from"),
 		}),
 	},
 };

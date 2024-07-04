@@ -11,6 +11,7 @@ import RubricInput from "./rubric-input";
 import RubricLayout from "./rubric-layout";
 import RubricTable from "./rubric-table";
 import RubricMarkdown from "./rubric-markdown";
+import RubricAiImage from "./rubric-ai-image";
 
 const componentMap = {
 	show_button: (props: z.infer<typeof rubricSchema.components.button>) => (
@@ -39,6 +40,9 @@ const componentMap = {
 	) => <RubricDataTable {...props} />,
 	show_markdown: (props: z.infer<typeof rubricSchema.components.markdown>) => (
 		<RubricMarkdown>{props.markdown}</RubricMarkdown>
+	),
+	show_ai_image: (props: z.infer<typeof rubricSchema.components.ai_image>) => (
+		<RubricAiImage {...props} />
 	),
 };
 
