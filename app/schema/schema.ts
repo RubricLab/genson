@@ -93,7 +93,7 @@ const rubricSchema = {
 				.array(z.string())
 				.describe(
 					"The columns names to remove from the table. Must be based on the returns schema of the dataAPI",
-				),
+				).default([]),
 		}),
 		layout: z
 			.object({
@@ -110,6 +110,13 @@ const rubricSchema = {
 		ai_image: z.object({
 			prompt: z.string().describe("The prompt to generate the image from"),
 		}),
+		update_attrs: z.object({
+			updates: z.array(z.object({
+				id: z.string().describe("The id of the component to update. Ex: id_1"),
+				update: z.record(z.string(), z.any()).describe("The new props to update"),
+				})),
+		})
+			.describe("An array of objects to update the props of the components"),
 	},
 };
 

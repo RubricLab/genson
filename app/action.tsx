@@ -16,6 +16,7 @@ import { initialAIState, initialUIState } from "./page";
 import { rubricSchema } from "./schema";
 import RubricMarkdown from "@/components/rubric/rubric-markdown";
 import RubricAiImage from "@/components/rubric/rubric-ai-image";
+import RubricAny from "@/components/rubric/rubric-any";
 
 async function submitMessage(content: string) {
 	"use server";
@@ -40,10 +41,87 @@ async function submitMessage(content: string) {
 		}
 	}
 
+	function addIdToJson(json: Record<string, any>) {
+		let maxId = 0;
+
+		function traverseAndProcess(obj: Record<string, any>) {
+			if (typeof obj !== "object" || obj === null) return;
+
+			if (obj.id?.startsWith("id_")) {
+				const idNumber = Number.parseInt(obj.id.replace("id_", ""));
+				if (!Number.isNaN(idNumber) && idNumber > maxId) {
+					maxId = idNumber;
+				}
+			}
+
+			if (!obj.id) {
+				obj.id = `id_${++maxId}`;
+			}
+
+			for (const key in obj) {
+				if (Object.prototype.hasOwnProperty.call(obj, key)) {
+					const value = obj[key];
+					if (Array.isArray(value)) {
+						for (const item of value) {
+							if (typeof item === "object") {
+								traverseAndProcess(item);
+							}
+						}
+					} else {
+						traverseAndProcess(value);
+					}
+				}
+			}
+		}
+
+		traverseAndProcess(json);
+		return json;
+	}
+
+	type JsonObject = { [key: string]: any };
+
+	function updateJsonById(json: JsonObject, id: string, newSchema: JsonObject) {
+		function recursiveUpdate(node: JsonObject): JsonObject {
+			if (node.id === id) {
+				// Update the specific attributes within the node
+				for (const key in newSchema) {
+					node[key] = newSchema[key];
+				}
+				return node;
+			}
+
+			for (const key in node) {
+				if (Array.isArray(node[key])) {
+					node[key] = node[key].map((item: JsonObject) =>
+						recursiveUpdate(item),
+					);
+				} else if (typeof node[key] === "object" && node[key] !== null) {
+					node[key] = recursiveUpdate(node[key]);
+				}
+			}
+
+			return node;
+		}
+
+		return recursiveUpdate(json);
+	}
+
+	function getLastToolCall() {
+		const aiStateData = aiState.get();
+		for (let i = aiStateData.length - 1; i >= 0; i--) {
+			if (aiStateData[i].role === "tool") {
+				return aiStateData[i];
+			}
+		}
+		return null;
+	}
+
+	const lastTool = getLastToolCall();
+
 	const result = await streamUI({
 		model: anthropic("claude-3-5-sonnet-20240620"),
 		system:
-			"You are a powerful component rendering assistant that can render nested components too. Whenever you make a tool call, a new message will be appended to history saying TOOL CALL. DO NOT WRITE THIS YOURSELF, just use the tools! To render nested components, use layout. You can render any component inside of a layout (including ai image, tables, data tables, etc.). If the user asks you to render a component, then just do that, DO NOT GIVE A DESCRIPTION OF WHAT YOU ARE DOING. JUST RENDER THE COMPONENT. Use the context of the conversation to iteratively improve/update the component.",
+			"You are a powerful component rendering assistant that can render nested components too. Everything must be done in one call, one pass. YOU DO NOT HAVE MORE CHANCES/STEPS. If the user does not ask you to remove things, then DO NOT REMOVE THINGS. Whenever you make a tool call, a new message will be appended to history saying TOOL CALL. DO NOT WRITE THIS YOURSELF, just use the tools! To render nested components, use layout. You can render any component inside of a layout (including ai image, tables, data tables, etc.). Use update props as much as possible, even when changing the child of a layout, since it is more efficient. If the user asks you to render a component, then just do that, DO NOT GIVE A DESCRIPTION OF WHAT YOU ARE DOING. JUST RENDER THE COMPONENT. Use the context of the conversation to iteratively improve/update the component. When your render correct json, ids will automatically be attached and the user can reference these ids to perform modification. Ex: remove id 1, then remove the component with the according id.",
 		messages: [
 			{
 				role: "user",
@@ -87,7 +165,7 @@ async function submitMessage(content: string) {
 							id: id,
 							role: "tool",
 							name: "show_button",
-							content: JSON.stringify(args),
+							content: JSON.stringify(addIdToJson(args)),
 						},
 					]);
 					yield <Spinner />;
@@ -104,7 +182,7 @@ async function submitMessage(content: string) {
 							id: id,
 							role: "tool",
 							name: "show_input",
-							content: JSON.stringify(args),
+							content: JSON.stringify(addIdToJson(args)),
 						},
 					]);
 					yield <Spinner />;
@@ -122,7 +200,7 @@ async function submitMessage(content: string) {
 							id: id,
 							role: "tool",
 							name: "show_weather_card",
-							content: JSON.stringify(args),
+							content: JSON.stringify(addIdToJson(args)),
 						},
 					]);
 					yield <Spinner />;
@@ -139,7 +217,7 @@ async function submitMessage(content: string) {
 							id: id,
 							role: "tool",
 							name: "show_dropdown",
-							content: JSON.stringify(args),
+							content: JSON.stringify(addIdToJson(args)),
 						},
 					]);
 					yield <Spinner />;
@@ -156,7 +234,7 @@ async function submitMessage(content: string) {
 							id: id,
 							role: "tool",
 							name: "show_form",
-							content: JSON.stringify(args),
+							content: JSON.stringify(addIdToJson(args)),
 						},
 					]);
 					console.log(JSON.stringify(args, null, 2));
@@ -174,7 +252,7 @@ async function submitMessage(content: string) {
 							id: id,
 							role: "tool",
 							name: "show_table",
-							content: JSON.stringify(args),
+							content: JSON.stringify(addIdToJson(args)),
 						},
 					]);
 					yield <Spinner />;
@@ -191,7 +269,7 @@ async function submitMessage(content: string) {
 							id: id,
 							role: "tool",
 							name: "show_data_table",
-							content: JSON.stringify(args),
+							content: JSON.stringify(addIdToJson(args)),
 						},
 					]);
 					console.log("data table");
@@ -204,17 +282,17 @@ async function submitMessage(content: string) {
 				description: "Show a layout",
 				parameters: rubricSchema.components.layout,
 				generate: async function* (args) {
+					yield <Spinner />;
 					aiState.done([
 						...aiState.get(),
 						{
 							id: id,
 							role: "tool",
 							name: "show_layout",
-							content: JSON.stringify(args),
+							content: JSON.stringify(addIdToJson(args)),
 						},
 					]);
-					console.log(JSON.stringify(args, null, 2));
-					yield <Spinner />;
+					// console.log(JSON.stringify(args, null, 2));
 					return <RubricLayout props={args} />;
 				},
 			},
@@ -228,7 +306,7 @@ async function submitMessage(content: string) {
 							id: id,
 							role: "tool",
 							name: "show_markdown",
-							content: JSON.stringify(args),
+							content: JSON.stringify(addIdToJson(args)),
 						},
 					]);
 					yield <Spinner />;
@@ -246,11 +324,40 @@ async function submitMessage(content: string) {
 							id: id,
 							role: "tool",
 							name: "show_ai_image",
-							content: JSON.stringify(args),
+							content: JSON.stringify(addIdToJson(args)),
 						},
 					]);
 					yield <Spinner />;
 					return <RubricAiImage {...args} />;
+				},
+			},
+			update_attrs: {
+				description:
+					"Updates the attributes of a component. Ex: update_attr(id_1, {info: {name: 'new name'}}) will overwrite the attribute(s) of the component with the new value (in this case, info). The ID must be the same level as the attribute. Ex: {id:any, placeholder: 'new placeholder'} will update the placeholder of the component with the new value. Attributes can be anything valid to the component specified by type or toolName: Ex: placeholder, props, size, etc. Pass array to update multiple.",
+				parameters: rubricSchema.components.update_attrs,
+				generate: async function* (args) {
+					console.log(JSON.stringify(args, null, 2));
+
+					let updatedJson = JSON.parse(lastTool.content);
+
+					for (const update of args.updates) {
+						updatedJson = updateJsonById(updatedJson, update.id, update.update);
+					}
+
+					aiState.done([
+						...aiState.get(),
+						{
+							id: id,
+							role: "tool",
+							name: lastTool.name,
+							content: JSON.stringify(addIdToJson(updatedJson)),
+						},
+					]);
+					yield <Spinner />;
+					if (lastTool.name === "show_layout") {
+						return <RubricLayout props={updatedJson} />;
+					}
+					return <RubricAny type={lastTool.name} props={updatedJson} />;
 				},
 			},
 		},

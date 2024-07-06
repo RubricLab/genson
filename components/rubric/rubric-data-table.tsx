@@ -15,6 +15,7 @@ export default async function RubricDataTable(
 	props: z.infer<typeof rubricSchema.components.dataTable>,
 ) {
 	const data = await queryActions[props.dataAPI.name].fn(props.dataAPI.args);
+	const columnsToRemove = props.columns_to_remove || []; // Default to empty array if undefined
 
 	return (
 		<Table className="overflow-auto">
@@ -22,7 +23,7 @@ export default async function RubricDataTable(
 			<TableHeader>
 				<TableRow>
 					{Object.keys(data[0])
-						.filter((key) => !props.columns_to_remove.includes(key))
+						.filter((key) => !columnsToRemove.includes(key)) // Use columnsToRemove
 						.map((column, index) => (
 							<TableHead key={column}>{column}</TableHead>
 						))}
@@ -32,7 +33,7 @@ export default async function RubricDataTable(
 				{data.map((row: any, index: number) => (
 					<TableRow key={index.toString()}>
 						{Object.keys(row)
-							.filter((key) => !props.columns_to_remove.includes(key))
+							.filter((key) => !columnsToRemove.includes(key)) // Use columnsToRemove
 							.map((column, cellIndex) => (
 								<TableCell key={`${index}-${cellIndex.toString()}`}>
 									{row[column]}
