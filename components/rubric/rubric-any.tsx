@@ -12,6 +12,7 @@ import RubricLayout from "./rubric-layout";
 import RubricTable from "./rubric-table";
 import RubricMarkdown from "./rubric-markdown";
 import RubricAiImage from "./rubric-ai-image";
+import IDBox from "../id-box";
 
 const componentMap = {
 	show_button: (props: z.infer<typeof rubricSchema.components.button>) => (
@@ -46,11 +47,14 @@ const componentMap = {
 	),
 };
 
-export default function RubricAny(props: RecursiveType) {
+export default function RubricAny(props: RecursiveType & {id?: string}) {
 	const Component = componentMap[props.type as keyof typeof componentMap];
 	return Component ? (
-		// biome-ignore lint/suspicious/noExplicitAny: Not defined to a specific type of component
-		Component(props.props as any)
+		<>
+			{props?.id && props.type !== "show_layout" && <IDBox id={props.id} />}
+			{/* biome-ignore lint/suspicious/noExplicitAny: Not defined to a specific type of component */}
+			{Component(props.props as any)}
+		</>
 	) : (
 		<div>Unknown: {props.type}</div>
 	);

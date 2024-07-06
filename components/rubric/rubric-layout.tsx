@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import type { z } from "zod";
 import RubricAny from "./rubric-any";
+import IDBox from "../id-box";
 
 export default function RubricLayout({
 	props,
@@ -22,13 +23,13 @@ export default function RubricLayout({
 			className={cn(
 				parent
 					? "rounded-lg border min-h-[400px] min-w-[800px]"
-					: "w-full h-full",
+					: "w-full h-full relative",
 			)}
 		>
 			<ResizablePanel
 				defaultSize={50}
 				className={cn(
-					"flex flex-col items-center justify-center",
+					"flex flex-col items-center justify-center relative group",
 					props.left_child.type !== "show_layout" ? "p-5" : "",
 				)}
 			>
@@ -38,7 +39,7 @@ export default function RubricLayout({
 			<ResizablePanel
 				defaultSize={50}
 				className={cn(
-					"flex flex-col items-center justify-center",
+					"flex flex-col items-center justify-center relative group",
 					props.right_child.type !== "show_layout" ? "p-5" : "",
 				)}
 			>

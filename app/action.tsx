@@ -307,7 +307,7 @@ async function submitMessage(content: string) {
 						},
 					]);
 					// console.log(JSON.stringify(args, null, 2));
-					return <RubricLayout props={addIdToJson(args)} />;
+					return <RubricLayout props={addIdToJson(args) as any} />;
 				},
 			},
 			show_markdown: {
