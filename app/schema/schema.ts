@@ -114,7 +114,8 @@ const rubricSchema = {
 			updates: z.array(z.object({
 				id: z.string().describe("The id of the component to update. Ex: id_1"),
 				update: z.record(z.string(), z.any()).describe("The new props to update"),
-				})),
+				type: z.enum(["update", "overwrite"]).describe("The type of update. Update will merge the new props with the existing props. Overwrite will replace all existing props with the new props and is usually used for replacement (ex: replace component with another)"),
+			})),
 		})
 			.describe("An array of objects to update the props of the components"),
 	},

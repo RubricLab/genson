@@ -80,29 +80,43 @@ async function submitMessage(content: string) {
 
 	type JsonObject = { [key: string]: any };
 
-	function updateJsonById(json: JsonObject, id: string, newSchema: JsonObject) {
+	function updateJsonById(json: JsonObject, id: string, newSchema: JsonObject, type: "update" | "overwrite") {
 		function recursiveUpdate(node: JsonObject): JsonObject {
 			if (node.id === id) {
-				// Update the specific attributes within the node
 				for (const key in newSchema) {
-					node[key] = newSchema[key];
+					if (typeof newSchema[key] === 'object' && newSchema[key] !== null && !Array.isArray(newSchema[key])) {
+						if (!node[key] || type === "overwrite") {
+							node[key] = {};
+						}
+						node[key] = mergeObjects(node[key], newSchema[key]);
+					} else {
+						node[key] = newSchema[key];
+					}
 				}
 				return node;
 			}
-
 			for (const key in node) {
-				if (Array.isArray(node[key])) {
-					node[key] = node[key].map((item: JsonObject) =>
-						recursiveUpdate(item),
-					);
-				} else if (typeof node[key] === "object" && node[key] !== null) {
+				if (typeof node[key] === 'object' && node[key] !== null) {
 					node[key] = recursiveUpdate(node[key]);
 				}
 			}
-
 			return node;
 		}
-
+	
+		function mergeObjects(target: JsonObject, source: JsonObject) {
+			for (const key in source) {
+				if (typeof source[key] === 'object' && source[key] !== null && !Array.isArray(source[key])) {
+					if (!target[key]) {
+						target[key] = {};
+					}
+					target[key] = mergeObjects(target[key], source[key]);
+				} else {
+					target[key] = source[key];
+				}
+			}
+			return target;
+		}
+	
 		return recursiveUpdate(json);
 	}
 
@@ -126,7 +140,7 @@ async function submitMessage(content: string) {
 			{
 				role: "user",
 				content:
-					"Remember to render things next to each other, use layout (layouts can contain anything, including ai images!). Unless, the user says anything, If the user did not specify what to add for a component prop (ex: button name, form action, etc.), ask for clarification. For components that must share data, the setterValue of the child and the getterValue of the parent must be the same. For example, this could be a input field changing something in a parent box, etc. Also, in forms, the number of arguments in the formAction must match the number of components in the form.",
+					"If I say a number like '6' or '2', i am referring to the id. Remember to render things next to each other, use layout (layouts can contain anything, including ai images!). Unless, the user says anything, If the user did not specify what to add for a component prop (ex: button name, form action, etc.), ask for clarification. For components that must share data, the setterValue of the child and the getterValue of the parent must be the same. For example, this could be a input field changing something in a parent box, etc. Also, in forms, the number of arguments in the formAction must match the number of components in the form.",
 			},
 			{
 				role: "assistant",
@@ -293,7 +307,7 @@ async function submitMessage(content: string) {
 						},
 					]);
 					// console.log(JSON.stringify(args, null, 2));
-					return <RubricLayout props={args} />;
+					return <RubricLayout props={addIdToJson(args)} />;
 				},
 			},
 			show_markdown: {
@@ -341,7 +355,7 @@ async function submitMessage(content: string) {
 					let updatedJson = JSON.parse(lastTool.content);
 
 					for (const update of args.updates) {
-						updatedJson = updateJsonById(updatedJson, update.id, update.update);
+						updatedJson = updateJsonById(updatedJson, update.id, update.update, update.type);
 					}
 
 					aiState.done([
