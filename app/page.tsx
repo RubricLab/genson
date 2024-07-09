@@ -11,6 +11,8 @@ import { useState } from "react";
 import { Textarea } from "rubricui";
 import type { AI } from "./action";
 import Dashboard from "./dashboard";
+import { useSession } from "next-auth/react";
+import Profile from "@/components/profile";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
@@ -34,6 +36,7 @@ export default function Page() {
 	const [inputValue, setInputValue] = useState("");
 	const [messages, setMessages] = useUIState<typeof AI>();
 	const { submitMessage } = useActions();
+	const session = useSession();
 
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
 		if (e.key === "Enter" || e.key === "NumpadEnter") {
@@ -96,8 +99,9 @@ export default function Page() {
 				</div>
 			</ResizablePanel>
 			<ResizableHandle withHandle />
-			<ResizablePanel defaultSize={70} maxSize={80} minSize={70}>
+			<ResizablePanel defaultSize={70} maxSize={80} minSize={70} className="relative">
 				{messages.length > 0 && <Dashboard messages={messages} />}
+				<Profile image={session.data?.user?.image || ""} />
 			</ResizablePanel>
 		</ResizablePanelGroup>
 	);

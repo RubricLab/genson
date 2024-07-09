@@ -4,24 +4,33 @@ import type { Metadata } from "next";
 import { AI } from "./action";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { SessionProvider } from "next-auth/react";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
 	title: "Generative UI Experiments",
 	description: "A collection of experiments with generative UI.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const session = await auth();
+	if (!session) return redirect("api/auth/signin");
+
+
 	return (
 		<html lang="en">
 			<body className="dark">
 				<Toaster />
-				<main className="p-4 h-screen">
-					<AI>{children}</AI>
-				</main>
+				<SessionProvider>
+					<main className="p-4 h-screen">
+						<AI>{children}</AI>
+					</main>
+				</SessionProvider>
 			</body>
 		</html>
 	);
