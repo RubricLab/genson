@@ -65,7 +65,7 @@ export default function Dashboard({ messages }: Props) {
 						.map((message) => (
 							<code
 								key={message.id}
-								className="w-full whitespace-pre text-sm flex"
+								className="w-full whitespace-break-spaces text-sm flex"
 							>
 								{JSON.stringify(
 									{ toolName: message?.name, ...JSON.parse(message.content) },

@@ -7,7 +7,7 @@ import { Toaster } from "sonner";
 import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
-	title: "Generative UI Experiments",
+	title: "Genson",
 	description: "A collection of experiments with generative UI.",
 };
 
