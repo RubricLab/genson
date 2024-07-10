@@ -5,8 +5,6 @@ import { AI } from "./action";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { SessionProvider } from "next-auth/react";
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
 	title: "Generative UI Experiments",
@@ -18,10 +16,6 @@ export default async function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
-	const session = await auth();
-	if (!session) return redirect("api/auth/signin");
-
-
 	return (
 		<html lang="en">
 			<body className="dark">
