@@ -72,7 +72,7 @@ export default function LoginForm() {
         <div className="flex items-center gap-2 justify-between">
           <div className="opacity-50">
             {" "}
-            A{" "}
+            A project from{" "}
             <Link
               target="_blank"
               href="https://rubriclabs.com"
@@ -80,7 +80,7 @@ export default function LoginForm() {
             >
               Rubric Labs
             </Link>
-            &apos; project
+            .
           </div>
           <Link
             target="_blank"
