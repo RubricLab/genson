@@ -223,17 +223,11 @@ const queryActions: Record<
 };
 
 const buttonActions = {
-	closeApp: () => {
-		alert("Closing App");
+	exampleAction: () => {
+		alert("Example Action");
 	},
-	renderCalendar: () => {
-		alert("Rendering Calendar");
-	},
-	renderWeather: () => {
-		alert("Rendering Weather");
-	},
-	renderWeather2: () => {
-		alert("Rendering Weather2");
+	hello: () => {
+		alert("Hello");
 	},
 	undefined: () => {
 		return;

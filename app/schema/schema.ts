@@ -19,10 +19,10 @@ const rubricSchema = {
 				.string()
 				.max(10)
 				.describe(
-					"Must be just the name of a country. ex: Canada, Brazil, United States",
+					"Must be one word",
 				),
 			onClick: z
-				.enum(["renderCalendar", "closeApp", "renderWeather2"])
+				.enum(["exampleAction", "hello"])
 				.optional()
 				.describe("Button types"),
 		}),
