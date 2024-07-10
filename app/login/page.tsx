@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { signIn } from "@/auth";
 import Link from "next/link";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 
 export default function LoginForm() {
   return (
@@ -68,16 +69,26 @@ export default function LoginForm() {
             </form>
           </CardContent>
         </Card>
-        <div className="opacity-50">
-          {" "}
-          A{" "}
+        <div className="flex items-center gap-2 justify-between">
+          <div className="opacity-50">
+            {" "}
+            A{" "}
+            <Link
+              target="_blank"
+              href="https://rubriclabs.com"
+              className="underline underline-offset-4 hover:opacity-80"
+            >
+              Rubric Labs
+            </Link>
+            &apos; project
+          </div>
           <Link
-            href="https://rubriclabs.com"
-            className="underline underline-offset-4 hover:opacity-80"
+            target="_blank"
+            href="https://github.com/RubricLab/genson"
+            className="hover:opacity-80"
           >
-            Rubric Labs
+            <GitHubLogoIcon className="w-4 h-4" />
           </Link>
-          &apos; project
         </div>
       </div>
     </div>
