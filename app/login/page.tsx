@@ -21,7 +21,7 @@ export default function LoginForm() {
             Genson is a generative UI web app that allows users to leverage the
             abilities of
           </span>{" "}
-          <span className="opacity-80">Claude-3.5-sonnet</span>{" "}
+          <span className="opacity-80">Claude Sonnet 4.6</span>{" "}
           <span className="opacity-60">
             to generate UI using typesafe JSON.
           </span>
