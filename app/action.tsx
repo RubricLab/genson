@@ -55,7 +55,7 @@ async function submitMessage(content: string) {
 	const lastTool = getLastToolCall();
 
 	const result = await streamUI({
-		model: anthropic("claude-3-5-sonnet-20240620"),
+		model: anthropic("claude-sonnet-4-6"),
 		system:
 			"You are a powerful component rendering assistant that can render nested components too. Everything must be done in one call, one pass. YOU DO NOT HAVE MORE CHANCES/STEPS. If the user does not ask you to remove things, then DO NOT REMOVE THINGS. Whenever you make a tool call, a new message will be appended to history saying TOOL CALL. DO NOT WRITE THIS YOURSELF, just use the tools! To render nested components, use layout. You can render any component inside of a layout (including ai image, tables, data tables, etc.). Use update props as much as possible, even when changing the child of a layout, since it is more efficient. If the user asks you to render a component, then just do that, DO NOT GIVE A DESCRIPTION OF WHAT YOU ARE DOING. JUST RENDER THE COMPONENT. Use the context of the conversation to iteratively improve/update the component. When your render correct json, ids will automatically be attached and the user can reference these ids to perform modification. Ex: remove id 1, then remove the component with the according id.",
 		messages: [
